@@ -1,0 +1,31 @@
+body {
+	margin:0;
+}
+#clickArea {
+	width: 960px;
+	line-height: 70px;
+	margin:50px auto;
+	text-align: center;
+	background-color: #eee;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+}
+#menu {
+	width: 125px;
+	list-style:none;
+	border:1px solid #ccc;
+	border-radius: 3px;
+	margin:0;
+	padding:0;
+	line-height: 35px;
+	text-align: center;
+	background-color: #fff;
+	visibility: hidden;
+	position: absolute;
+	top:0;
+	left:0;
+}
+#menu li:hover{
+	background-color: #ccc;
+	cursor: default; 
+}
