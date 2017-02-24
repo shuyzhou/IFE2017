@@ -2,7 +2,7 @@ var clickArea = document.querySelector('#clickArea');
 var menu = document.querySelector('#menu');
 //监听自定义菜单区域右键点击事件
 clickArea.oncontextmenu = showMenu;
-//监听非自定义菜单区域点击事件
+//监听全局点击事件
 window.oncontextmenu = hideMenu;
 window.onclick = hideMenu;
 //监听自定义菜单点击事件
