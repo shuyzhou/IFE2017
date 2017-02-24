@@ -5,6 +5,8 @@ clickArea.oncontextmenu = showMenu;
 //监听非自定义菜单区域点击事件
 window.oncontextmenu = hideMenu;
 window.onclick = hideMenu;
+//监听自定义菜单点击事件
+menu.onclick = showName;
 function showMenu(e) {
 	var position = getMenuPosition(e.clientX,e.clientY);
 	menu.style.top = position.top + "px";
@@ -29,5 +31,11 @@ function getMenuPosition(x,y) {
 	return {
 		left: left,
 		top: top
+	}
+}
+function showName(e) {
+	var src = e.srcElement;
+	if(src.tagName.toLowerCase() === 'li'){
+		alert(src.textContent);
 	}
 }
