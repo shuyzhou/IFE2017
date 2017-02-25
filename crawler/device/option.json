@@ -1,0 +1,19 @@
+{
+    "option":{
+        "iphone5":{
+            "userAgent":"Mozilla/5.0",
+            "width":320,
+            "height":568
+        },
+        "iphone6":{
+            "userAgent":"Mozilla/5.0",
+            "width":375,
+            "height":667
+        },
+        "ipad":{
+            "userAgent":"Mozilla/5.0 ",
+            "width":768,
+            "height":1024
+        }
+    }
+}

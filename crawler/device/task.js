@@ -1,10 +1,8 @@
 var page = require('webpage').create(),
 	system = require('system'),
 	key,
-	device,
 	result;
 key = system.args[1];
-device = system.args[2];
 page.open('http://www.baidu.com/s?wd=' + key, function(status) {
 	if(status == "success"){
 		var t = Date.now();
