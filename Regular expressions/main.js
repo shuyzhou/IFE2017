@@ -1,0 +1,11 @@
+var mobile = new RegExp(/^13[0-9]|147|15[0-3]|15[5-9]|180|18[5-9]$/);
+var t1 = 18812011232;  
+var t2 = 18812312;     
+var t3 = 12345678909;  
+console.log(mobile.test(t3));
+var repeat = new RegExp(/\b(\w+)\b\s+\1\b/);
+var word1 = 'foo foo bar';
+var word2 = 'foo bar foo';       
+var word3 = 'foo barbar bar';
+var word4 = 'foo bar bar bar';
+console.log(repeat.test(word4));
