@@ -21,28 +21,19 @@ page.open('http://www.baidu.com/s?wd=' + key, function(status) {
 			try {
     			while(i <= num) {
     				if(page.loadingProgress=100){
-    					var title = page.evaluate(function (i) {
+    					var res= page.evaluate(function (i) {
     						var titleId = "#"+i+">h3";
-    						return $(titleId).text();
-    					},i);
-    					var info = page.evaluate(function (i) {
     						var infoId = "#"+i+" .c-abstract";
-    						return $(infoId).text();
-    					},i);
-    					var link= page.evaluate(function (i) {
     						var linkId = "#"+i+" a:first-child";
-    						return $(linkId).attr("href");
-    					},i);
-    					var pic= page.evaluate(function (i) {
     						var picId = "#"+i+" img.c-img";
-    						return $(picId).attr("src");
+    						return JSON.stringify({
+    							title: $(titleId).text(),  //结果条目的标题
+             	  				info: $(infoId).text(), //摘要
+             	  				link: $(linkId).attr("href"), //链接            
+             	  				pic: $(picId).attr("src")  //缩略图地址
+    						});
     					},i);
-    					result.dataList.push({
-    						title: title,  //结果条目的标题
-             	  			info: info, //摘要
-             	  			link: link, //链接            
-             	  			pic: pic  //缩略图地址
-    					});
+    					result.dataList.push(JSON.parse(res));
     					i++;
     				}
     			}
