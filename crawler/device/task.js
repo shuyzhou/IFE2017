@@ -1,19 +1,19 @@
 var page = require('webpage').create(),
 	system = require('system'),
-	fs = require("fs"),
+//	fs = require("fs"),
 	key,
 	device,
 	file,
-	option,
+	option = require('./option.json'),
 	result;
 //读取配置文件
-fs.encoding="GB2312";
+/*fs.encoding="GB2312";
 //调用读的方法
 file=fs.open("option.json",'r');
 //没有读取一行的功能，只有读取全部的功能
 option=JSON.parse(file.read());
 //读取完毕后关闭
-file.close();
+file.close();*/
 key = system.args[1];
 device = system.args[2];
 page.settings.userAgent = option[device].userAgent;
