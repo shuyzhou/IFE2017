@@ -1,25 +1,44 @@
 var page = require('webpage').create(),
 	system = require('system'),
+	fs = require("fs"),
 	key,
+	device,
+	file,
+	option,
 	result;
+//读取配置文件
+fs.encoding="GB2312";
+//调用读的方法
+file=fs.open("option.json",'r');
+//没有读取一行的功能，只有读取全部的功能
+option=JSON.parse(file.read());
+//读取完毕后关闭
+file.close();
 key = system.args[1];
-page.open('http://www.baidu.com/s?wd=' + key, function(status) {
+device = system.args[2];
+page.settings.userAgent = option[device].userAgent;
+page.viewportSize = {
+  width: option[device].width,
+  height: option[device].height
+};
+page.open('http://www.baidu.com/s?wd=' + encodeURIComponent(key), function(status) {
 	if(status == "success"){
 		var t = Date.now();
 		page.includeJs("http://libs.baidu.com/jquery/2.0.0/jquery.min.js", function() {
     		var num = page.evaluate(function() {
       			return $(".c-container").length;
     		});
-    		var i = 1;
+    		var i = 0;
     		result = {
 				code: 1,
 				msg: '抓取成功',
 				word: key,
 				time: 0,
+				device: device,
 				dataList: []
 			};
 			try {
-    			while(i <= num) {
+    			while(i < num) {
     				if(!page.loading){
     					var res= page.evaluate(function (i) {
     						var titleId = "#"+i+">h3";
@@ -45,6 +64,7 @@ page.open('http://www.baidu.com/s?wd=' + key, function(status) {
 					msg: '抓取失败',
 					word: key,
 					time: 0,
+					device: device,
 					dataList: []
 				};
     		}
@@ -58,10 +78,10 @@ page.open('http://www.baidu.com/s?wd=' + key, function(status) {
 			msg: '抓取失败',
 			word: key,
 			time: 0,
+			device: device,
 			dataList: []
 		};
 		console.log(JSON.stringify(result));
 		phantom.exit();
 	}
-
 });

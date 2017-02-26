@@ -3,7 +3,7 @@ var page = require('webpage').create(),
 	key,
 	result;
 key = system.args[1];
-page.open('http://www.baidu.com/s?wd=' + key, function(status) {
+page.open('http://www.baidu.com/s?wd=' + encodeURIComponent(key), function(status) {
 	if(status == "success"){
 		var t = Date.now();
 		page.includeJs("http://libs.baidu.com/jquery/2.0.0/jquery.min.js", function() {
