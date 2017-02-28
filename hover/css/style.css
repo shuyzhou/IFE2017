@@ -32,7 +32,9 @@
 	background-image: linear-gradient(to right, red, yellow, green, blue, violet,  red, yellow, green, blue, violet,red);
 	background-size: 200% 100%;
 	animation: streamer 7s linear infinite;
+	background-clip: text;
 	-webkit-background-clip: text;
+	-o-background-clip: text;
 }
 img {
 	width: 300px;
