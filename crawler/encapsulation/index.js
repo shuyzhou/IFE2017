@@ -7,13 +7,13 @@ http.createServer((req, res) => {
     const param = url.parse(req.url,true).query; 
     const word = param.word;
     const device = param.device;
+    const command = `phantomjs task.js ${word} ${device}`
     let result;
     res.writeHead(200, {"Content-Type": "text/plain"});
     if(!!word && !!device){
-    	exec('phantomjs task.js ' + word + ' ' + device, (err, stdout, stderr) => {
+    	exec(command, (err, stdout, stderr) => {
   			if (err) {
     			console.error(err);
-    			return;
   			}
   			result = JSON.parse(stdout);
   			dataDAO.save(result,function (err,data) {
