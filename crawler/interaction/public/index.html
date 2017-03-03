@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>interaction</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+	</head>
+	<body>
+	<form id="crawler" action="/crawler" method="get">
+		<label for="keyword">请填写关键词</label>
+		<input id="keyword" type="text" name="keyword" required>
+		<label for="userAgent">请选择设备</label>
+		<select id="userAgent" name="userAgent">
+			<option value="">无</option>
+			<option value="iphone5">iphone5</option>
+			<option value="iphone6">iphone6</option>
+			<option value="ipad">ipad</option>
+		</select>
+		<button type="submit">确定</button>
+	</form>
+	</body>
+</html>

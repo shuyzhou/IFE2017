@@ -1,0 +1,26 @@
+{
+  "name": "interaction",
+  "version": "1.0.0",
+  "description": "IFE2017",
+  "main": "app.js",
+  "scripts": {
+    "dev": "gulp dev"
+  },
+  "keywords": [
+    "crawler"
+  ],
+  "author": "shuyzhou",
+  "license": "MIT",
+  "dependencies": {
+    "co-views": "^2.1.0",
+    "koa": "^2.0.1",
+    "koa-static": "^3.0.0",
+    "mongoose": "^4.8.5",
+    "request": "^2.79.0",
+    "swig": "^1.4.2"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.8",
+    "gulp": "^3.9.1"
+  }
+}

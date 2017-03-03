@@ -7,11 +7,13 @@ var page = require('webpage').create(),
 	result;
 key = system.args[1];
 device = system.args[2];
-page.settings.userAgent = option[device].userAgent;
-page.viewportSize = {
-  width: option[device].width,
-  height: option[device].height
-};
+if(!!device){
+	page.settings.userAgent = option[device].userAgent;
+	page.viewportSize = {
+	  width: option[device].width,
+	  height: option[device].height
+	};
+}
 page.open('http://www.baidu.com/s?wd=' + encodeURIComponent(key), function(status) {
 	if(status == "success"){
 		var t = Date.now();
