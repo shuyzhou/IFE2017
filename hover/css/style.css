@@ -5,7 +5,7 @@
 	margin: 100px auto;
 	position: relative;
 }
-#wrapper .word, #wrapper .wordBackground1, #wrapper .wordBackground2{
+#wrapper .word{
 	width: 260px;
 	height: 168px;
 	position: absolute;
@@ -15,15 +15,39 @@
 	margin-left: -130px;
 	margin-top: -84px;
 }
-#wrapper:hover .wordBackground1{
+#wrapper .word:before{
+	content: '';
+	width: 0;
+	height: 168px;
 	border-top: 1px solid #fff;
 	border-bottom: 1px solid #fff;
-	animation:extendX  1s linear;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	color: transparent;
+	margin-top: -84px;
+	transition: all 1s;
 }
-#wrapper:hover .wordBackground2{
+#wrapper .word:after{
+	content: '';
+	width: 260px;
+	height: 0;
 	border-left: 1px solid #fff;
 	border-right: 1px solid #fff;
-	animation:extendY  1s linear;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	color: transparent;
+	margin-left: -130px;
+	transition: all 1s;
+}
+#wrapper:hover .word:before{
+	width: 260px;
+	margin-left: -130px;
+}
+#wrapper:hover .word:after{
+	height: 168px;
+	margin-top: -84px;
 }
 #wrapper:hover .word{
 	text-align: center;
@@ -48,14 +72,4 @@ img {
 {
 from {background-position: 0 0;}
 to {background-position: -100% 0;}
-}
-@keyframes extendX
-{
-from {transform: scaleX(0.1);}
-to {transform: scaleX(1);}
-}
-@keyframes extendY
-{
-from {transform: scaleY(0.1);}
-to {transform: scaleY(1);}
 }
