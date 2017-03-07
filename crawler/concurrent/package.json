@@ -19,8 +19,7 @@
     "mongoose": "^4.8.6",
     "phantom": "^4.0.0",
     "request": "^2.80.0",
-    "socket.io": "^1.7.3",
-    "swig": "^1.4.2"
+    "socket.io": "^1.7.3"
   },
   "devDependencies": {
     "browser-sync": "^2.18.8",
