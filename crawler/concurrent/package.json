@@ -1,0 +1,29 @@
+{
+  "name": "parallel",
+  "version": "1.0.0",
+  "description": "IFE2017",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [
+    "parallel",
+    "crawler"
+  ],
+  "author": "shuyzhou",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^2.1.5",
+    "koa": "^2.0.1",
+    "koa-router": "^7.0.1",
+    "koa-static": "^3.0.0",
+    "koa-views": "^6.0.0",
+    "mongoose": "^4.8.6",
+    "phantom": "^4.0.0",
+    "request": "^2.80.0",
+    "socket.io": "^1.7.3",
+    "swig": "^1.4.2"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.8",
+    "gulp": "^3.9.1"
+  }
+}

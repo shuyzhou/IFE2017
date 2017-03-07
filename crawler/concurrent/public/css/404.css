@@ -1,0 +1,79 @@
+body {
+	margin: 0;
+	padding: 0;
+}
+#container {
+	width: 200px;
+	height: 180px;
+	text-align: center;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -100px auto auto -90px;
+}
+span {
+	font-size: 24px;
+	display: block;
+}
+/*****svg*****/
+svg {
+  line-height:0;
+  font-size:0;
+  width:140px;
+  height:140px;
+}
+.path {
+  fill:none;
+  stroke:#000000;
+  stroke-dasharray: 1000;
+  -webkit-animation: dash 5s ease-in-out;
+  animation: dash 5s ease-in-out;
+}
+.eyes, .hands, #mouth{
+  stroke:#000000;
+  -webkit-animation: in 7s;
+  animation: in 7s;
+}
+#mouth {
+  display:inline;
+  fill:none;
+}
+.blush {
+  fill:#E60012;
+  stroke:#E60012;
+}
+#smile {
+  display:none;
+}
+@-webkit-keyframes dash {
+  from {
+	 stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes dash {
+  from {
+	 stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@-webkit-keyframes in {
+  from {
+    opacity:0;
+  }
+  to {
+    opacity:1;
+  }
+}
+@keyframes in {
+  from {
+    opacity:0;
+  }
+  to {
+    opacity:1;
+  }
+}

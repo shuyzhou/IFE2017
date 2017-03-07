@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>interaction</title>
+		<link rel="stylesheet" type="text/css" href="css/index.css">
+	</head>
+	<body>
+	<form id="crawler" action="/crawler" method="get">
+		<label for="keyword">关键词</label>
+		<input id="keyword" type="text" name="keyword" required>
+      <label for="page">页码</label>
+      <input id="page" type="text" name="page" size=2 pattern="\d+" required>
+		<label for="device">设备</label>
+		<input type="checkbox" name="device" value="iphone5">iphone5
+		<input type="checkbox" name="device" value="iphone6">iphone6
+		<input type="checkbox" name="device" value="ipad">ipad
+		<button type="button">确定</button>
+	</form>
+	<span id="progress"></span>
+	<div id="result"></div>
+
+	<script id="result_tmpl" type="text/html">
+	<span>关键词：<%= data.word%>   设备：<%= data.device%></span>
+	<table border="1" cellspacing="0">
+  	<tr>
+  		<th>标题</th>
+  		<th>摘要</th>
+  		<th>链接</th>
+  		<th>缩略图</th>
+  	</tr>
+  	<% for(var i=0;i<data.dataList.length;i++){ %>
+  	<tr>
+   		<td><%= data.dataList[i].title%></td>
+  		<td><%= data.dataList[i].info%></td>
+  		<td><%= data.dataList[i].link%></td>
+  		<td><img src="<%= data.dataList[i].pic%>"></td>
+  	</tr>
+  	<% } %>
+	</table>
+	</script>
+	</body>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/javascript/Micro-Templating.js"></script>
+   	<script src="/javascript/index.js"></script>
+</html>
