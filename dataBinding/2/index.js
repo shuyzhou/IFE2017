@@ -44,14 +44,17 @@ p.convert = function (key, val) {
     })
 };
 p.$watch = function (key,callback) {
-    if(key in this){
-        this.event.listen(key,callback);
-    }
-    else {
-        for (let [prop, val] of Object.entries(this)) {
-            if (typeof val === 'object' && !!val.$watch) {
-                val.$watch(key,callback);
-            }
+    let keyList = key.split('.');
+    let observer;
+    let prop;
+    keyList.reduce((obj,key) => {
+        if (obj.hasOwnProperty(key)) {
+                observer = obj;
+                prop = key;
+                return obj[key];
+        } else {
+            throw Error('The property does not exist!');
         }
-    }
+    }, this);
+    observer.watcher.listen(prop,callback);
 }
