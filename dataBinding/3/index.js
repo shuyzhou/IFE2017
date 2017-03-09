@@ -7,9 +7,9 @@ function observerFactory(data) {
     }
 }
 // 观察者构造函数
-function Observer(data,superviser = null) {
+function Observer(data,supervisor = null) {
     this.watcher = new Event();
-    this.superviser = superviser;
+    this.supervisor = supervisor;
     this.walk(data);
 }
 
@@ -41,7 +41,7 @@ p.convert = function (key, val) {
             }
             val = newVal;
             this.watcher.trigger(key,newVal);
-            this.superviser.trigger(this.$parent,newVal);
+            this.supervisor.trigger(this.$parent,newVal);
         }
     })
 };
