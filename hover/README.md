@@ -1,3 +1,5 @@
+### IFE2017
+有趣的鼠标悬浮模糊效果
 `css3`标准中有许多吸引人的新特性，但由于各种浏览器的存在，在使用时需要考虑到`兼容性`的问题。
 图片模糊效果是用`filter`属性实现的，顾名思义，`filter`是给图像数据加滤波器，利用`filter`可以对图片进行模糊、锐化、提亮等处理。
 文字流光效果首先用到了`background-clip: text;`这个属性可以将背景图案显示区域限制在文字上，然后是`background-image: linear-gradient(to right, red, yellow, green, blue, violet,  red, yellow, green, blue, violet,red);`CSS函数 `linear-gradient()`可以产生一副颜色线性渐变的图像。这里为了让动画看上去衔接自然，借用轮播图的思想，将背景图案做成了两幅渐变拼接的图片，通过控制`background-position`属性来做出流光效果。
