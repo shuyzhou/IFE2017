@@ -1,29 +1,31 @@
+function observerFactory(data) {
+    return {
+        data: new Observer(data),
+        $watch: function (key,callback) {
+            this.data.$watch(key,callback);
+        }
+    }
+}
 // 观察者构造函数
 function Observer(data) {
-    this.data = data;
     this.walk(data);
+    this.event = new Event();
 }
 
 let p = Observer.prototype;
 
-let event = new Event();
 p.walk = function (obj) {
-    let val;
-    for (let key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            val = obj[key];
-
-            // 这里进行判断，如果还没有遍历到最底层，继续new Observer
-            if (typeof val === 'object') {
-                new Observer(val);
-            }
-            this.convert(key, val);
+    for (let [key, val] of Object.entries(obj)) {
+        // 这里进行判断，如果还没有遍历到最底层，继续new Observer
+        if (typeof val === 'object') {
+            val = new Observer(val);
         }
+        this.convert(key, val); 
     }
 };
 //为某个属性绑定getter和setter
 p.convert = function (key, val) {
-    Object.defineProperty(this.data, key, {
+    Object.defineProperty(this, key, {
         enumerable: true,
         configurable: true,
         get: function () {
@@ -34,13 +36,22 @@ p.convert = function (key, val) {
             console.log('你设置了' + key + '，' + '新的值为' + newVal);
             if (newVal === val) return;
             if (typeof newVal === 'object') {
-                new Observer(newVal);
+                val = new Observer(newVal);
             }
             val = newVal;
-            event.trigger(key,newVal);
+            this.event.trigger(key,newVal);
         }
     })
 };
 p.$watch = function (key,callback) {
-    event.listen(key,callback);
+    if(key in this){
+        this.event.listen(key,callback);
+    }
+    else {
+        for (let [prop, val] of Object.entries(this)) {
+            if (typeof val === 'object' && !!val.$watch) {
+                val.$watch(key,callback);
+            }
+        }
+    }
 }
