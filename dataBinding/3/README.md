@@ -30,3 +30,24 @@ set: function (newVal) {
    this.supervisor.trigger(this.$parent,newVal);
 }
 ```
+#### 怎样实现事件冒泡
+但是现在还只是可以触发`parent observer`中注册的事件，但并没有实现事件的冒泡。想要深层事件可以一直冒泡的最外层，必须利用递归的思想一直触发高层` observer`的事件。当一个属性被改变时，除了触发其本身被改变的事件，并且触发一个可以冒泡的`all`事件，在构造函数中给`all`事件增添冒泡到上一层的回调函数。
+```
+// 观察者构造函数
+function Observer(data,supervisor = null) {
+    this.watcher = new Event();
+    this.supervisor = supervisor;
+     this.watcher.listen('all',(val) => {//这里添加冒泡
+        if (this.supervisor === null) {return;}
+        this.supervisor.trigger(this.$parent,val);
+        this.supervisor.trigger('all',val);
+    });
+    this.walk(data);
+}
+//setter
+set: function (newVal) {
+   //do something
+   this.watcher.trigger(key,newVal);
+   this.supervisor.trigger('all',newVal);
+}
+```
