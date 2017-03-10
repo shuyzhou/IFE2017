@@ -10,6 +10,11 @@ function observerFactory(data) {
 function Observer(data,supervisor = null) {
     this.watcher = new Event();
     this.supervisor = supervisor;
+    this.watcher.listen('all',(val) => {
+        if (this.supervisor === null) {return;}
+        this.supervisor.trigger(this.$parent,val);
+        this.supervisor.trigger('all',val);
+    });
     this.walk(data);
 }
 
@@ -41,7 +46,7 @@ p.convert = function (key, val) {
             }
             val = newVal;
             this.watcher.trigger(key,newVal);
-            this.supervisor.trigger(this.$parent,newVal);
+            this.watcher.trigger('all',newVal);
         }
     })
 };
