@@ -1,11 +1,3 @@
-function observerFactory(data) {
-    return {
-        data: new Observer(data),
-        $watch: function (key,callback) {
-            this.data.$watch(key,callback);
-        }
-    }
-}
 // 观察者构造函数
 function Observer(data,supervisor = null) {
     this.watcher = new Event();

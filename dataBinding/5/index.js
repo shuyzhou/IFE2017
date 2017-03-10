@@ -1,7 +1,7 @@
 class Vue {
     constructor(option) {
         this.ele = document.querySelector(option.el);
-        this.data = observerFactory(option.data);
+        this.data = new Observer(option.data);
         this.parse = eval(this.compile());
         this.init();
     }
@@ -10,7 +10,7 @@ class Vue {
         this.render();
     }
     render() {
-        const html = this.parse(this.data.data);
+        const html = this.parse(this.data);
         if(!this.html || this.html != html){
             this.html = this.ele.innerHTML = html;
         }
@@ -45,9 +45,9 @@ let app = new Vue({
     major: 'computer'
   }
 });
-app.data.data.school = 'SJTU';
-app.data.data.user.name = 'xiaoming';
-app.data.data.user = {
+app.data.school = 'SJTU';
+app.data.user.name = 'xiaoming';
+app.data.user = {
     name: 'sophia',
     age: 18
 }
