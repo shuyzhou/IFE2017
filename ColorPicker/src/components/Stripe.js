@@ -1,41 +1,45 @@
 import util from '../lib/util.js';
 import watcher from './watcher.js';
 export default class Stripe {
-	constructor(el) {
+	constructor(el,hue) {
 		this.el = document.querySelector(el);
 		this.ctx = this.el.getContext('2d');
-		this.init();
+		this.hue = hue < 1 ? hue : hue/360;
+		this.width = 25;
+		this.height = 500;
 	}
 	init() {
-		this.render(12.5,246);
+		this.render(this.hue*this.height);
 		//监听点击事件
 		this.el.addEventListener('click',function(e) {
 			var y = e.offsetY;
-			this.render(12.5,y);
+			this.render(y);
 			//触发色带改变事件
-			var color = util.getColor(this.ctx,12,y);
-			watcher.trigger('areaChange',color);
+			watcher.trigger('areaChange',(y/this.height)*360);
 		}.bind(this));
 	}
-	render(x,y) {
+	dealInput(color) {
+		this.render(color.h*this.height);
+	}
+	render(y) {
 		//绘制颜色色带
-		var gradient = this.ctx.createLinearGradient(0, 0, 0, 500);
-		this.el.height = 500;
-		this.el.width = 25;
+		var gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
+		this.el.height = this.height;
+		this.el.width = this.width;
 		gradient.addColorStop(0, '#ff0000');
-		gradient.addColorStop(0.2, '#ffff00');
-		gradient.addColorStop(0.4, '#00ff00');
+		gradient.addColorStop(0.167, '#ffff00');
+		gradient.addColorStop(0.333, '#00ff00');
 		gradient.addColorStop(0.5, '#00ffff');
-		gradient.addColorStop(0.6, '#0000ff');
-		gradient.addColorStop(0.8, '#db70db');
+		gradient.addColorStop(0.667, '#0000ff');
+		gradient.addColorStop(0.833, '#ff00ff');
 		gradient.addColorStop(1, '#ff0000');
 		this.ctx.fillStyle = gradient;
-		this.ctx.fillRect(0, 0, 25, 500);
+		this.ctx.fillRect(0, 0, this.width, this.height);
 		//绘制提示圆圈
-		this.ctx.strokeStyle = 'red';
+		this.ctx.strokeStyle = 'white';
 		this.ctx.beginPath();
 		this.ctx.lineWidth = 4;
-		this.ctx.arc(x, y, 9, 0, 2 * Math.PI);
+		this.ctx.arc(this.width/2, y, 9, 0, 2 * Math.PI);
 		this.ctx.stroke();
 	}
 }
