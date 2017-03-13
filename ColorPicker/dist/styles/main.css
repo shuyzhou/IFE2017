@@ -1,0 +1,31 @@
+#picker {
+	width: 700px;
+	position: relative;
+}
+#panel, #stripe{
+	border: 3px solid #cccccc;
+}
+#colorValue {
+	position: absolute;
+	top:0;
+	right: 0;
+}
+#colorValue label {
+	width: 25px;
+	line-height:50px;
+	font-size: 26px;
+	display: inline-block;
+	margin: 5px;
+	vertical-align: middle;
+}
+#colorValue input {
+	width: 85px;
+	line-height:70px;
+	font-size: 20px;
+	margin: 5px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	padding-left: 20px; 
+	display: inline-block;
+	vertical-align: middle;
+}
