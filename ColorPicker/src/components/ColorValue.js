@@ -18,8 +18,8 @@ export default class ColorValue {
 		this.el.addEventListener('input',this.dealInput.bind(this));
 	}
 	change(color) {
-		var {h,s,l} = color;
-		var {r,g,b} = util.HSL2rgb(color);
+		var {r,g,b} = color;
+		var {h,s,l} = util.rgb2HSL(color);
 		this.model.r = r;
 		this.model.g = g;
 		this.model.b = b;
@@ -33,19 +33,19 @@ export default class ColorValue {
 		this.els.r.value = r;
 		this.els.g.value = g;
 		this.els.b.value = b;
-		this.els.h.value = h;
-		this.els.s.value = s;
-		this.els.l.value = l;
+		this.els.h.value = h.toFixed(2).replace(/\.?0*$/g,'');
+		this.els.s.value = s.toFixed(2).replace(/\.?0*$/g,'');
+		this.els.l.value = l.toFixed(2).replace(/\.?0*$/g,'');
 	}
 	dealInput(e) {
 		var target = e.srcElement;
-		var input = parseFloat(target.value);
+		var input = target.value;
 		var validation = util.isValid(input,target.id);
 		if(!validation){
 			alert('Invalid input!');
 			return;
 		}
-		this.model[target.id] = input;
+		this.model[target.id] = parseFloat(input);
 		switch (target.id) {
 			case 'r':
 			case 'g':
@@ -91,11 +91,11 @@ export default class ColorValue {
 	set(type,data) {
 		type = type.toLowerCase();
 		if(type === 'rgb'){
-			data = util.rgb2HSL(data);
 			this.change(data);
 			watcher.trigger('input',this.model);
 		}
 		else if(type === 'hsl'){
+			data = util.rgb2HSL(data);
 			this.change(data);
 			watcher.trigger('input',this.model);
 		}

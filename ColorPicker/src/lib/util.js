@@ -2,17 +2,18 @@ export default {
 	getRGBValue: function (ctx,x,y) {
 		var data = ctx.getImageData(x, y, 1, 1);
 		var color = `rgb(${data.data[0]},${data.data[1]},${data.data[2]})`;
-		return color
+		color = color
 					.replace(/(?:\(|\)|rgb|RGB)*/g,"")
 					.split(",")
 					.map(function (str) {
 						return parseInt(str);
 					});
+		return {r:color[0],g:color[1],b:color[2]};
 	},
-	rgb2Hex: function (aColor) {
+	rgb2Hex: function (color) {
 		var strHex = "#";
-		for(var i=0; i<aColor.length; i++){
-			var hex = aColor[i].toString(16);
+		for(var i=0; i<color.length; i++){
+			var hex = color[i].toString(16);
 			if(hex === "0"){
 				hex += hex;	
 			}
@@ -26,13 +27,14 @@ export default {
 	rgb2HSL: function (color) {
 		var {r,g,b} = color;
 		r /= 255, g /= 255, b /= 255;
-    	var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    	var max = Math.max(r, g, b), 
+    		min = Math.min(r, g, b);
     	var h, s, l = (max + min) / 2;
+    	var d = max - min;
 
     	if(max == min){
         	h = s = 0; 
     	}else{
-        	var d = max - min;
         	s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
         	switch(max){
             	case r: h = (g - b) / d + (g < b ? 6 : 0); break;
@@ -43,6 +45,31 @@ export default {
     	}
     	return {h:h, s:s, l:l};
 	},
+	rgb2HSB: function(color) {
+        var {r,g,b} = color;
+        r /= 255, g /= 255, b /= 255;
+        var min = Math.min(r, g, b), 
+            max = Math.max(r, g, b),
+            d = max - min;
+        var h,s;
+
+        if( d == 0 ) { 
+            h = s = 0;
+        } else { 
+            s = d / max;
+            if(r == max) {
+                h = (g - b)/d;
+            }
+            else if(g == max) {
+                h = 2 + (b - r)/d; // between cyan & yellow
+            }
+            else {
+                h = 4 + (r - g)/d; // between magenta & cyan
+            }
+        }
+        h = ((h * 60) + 360) % 360;
+        return {h:h,s:s,b:max};
+    },
 	HSL2rgb: function (color) {
 		var {h,s,l} = color;
 		var p, q;
@@ -79,6 +106,9 @@ export default {
 		return parseInt(255 * v);
 	},
 	isValid: function(value,type){
+		if(/\D/.test(value)){
+			return false;
+		}
 		switch (type) {
 			case 'r':
 			case 'g':

@@ -6,7 +6,7 @@ export default class Picker {
 	constructor(el,color) {
 		this.el = document.querySelector(el);
 		this.panel = new Panel('#panel',color);
-		this.stripe = new Stripe('#stripe',color.h);
+		this.stripe = new Stripe('#stripe',color);
 		this.colorValue = new ColorValue('#colorValue',color);
 		this.init();
 	}

@@ -1,10 +1,11 @@
 import util from '../lib/util.js';
 import watcher from './watcher.js';
 export default class Stripe {
-	constructor(el,hue) {
+	constructor(el,color) {
+		let {h} = util.rgb2HSB(color);
 		this.el = document.querySelector(el);
 		this.ctx = this.el.getContext('2d');
-		this.hue = hue < 1 ? hue : hue/360;
+		this.hue = h < 1 ? h : h/360;
 		this.width = 25;
 		this.height = 500;
 	}
@@ -19,7 +20,8 @@ export default class Stripe {
 		}.bind(this));
 	}
 	dealInput(color) {
-		this.render(color.h*this.height);
+		var {h} = util.rgb2HSB(color);
+		this.render(h/360*this.height);
 	}
 	render(y) {
 		//绘制颜色色带

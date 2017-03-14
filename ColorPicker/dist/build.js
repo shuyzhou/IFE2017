@@ -53,14 +53,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var picker = new _Picker2.default('#picker', {
-		h: 0.49,
-		s: 1,
-		l: 0.5
-	});
-	picker.set('rgb', {
-		r: 45,
-		g: 66,
-		b: 218
+		r: 0,
+		g: 255,
+		b: 243
 	});
 
 /***/ },
@@ -89,11 +84,11 @@
 
 	var _Panel2 = _interopRequireDefault(_Panel);
 
-	var _Stripe = __webpack_require__(48);
+	var _Stripe = __webpack_require__(26);
 
 	var _Stripe2 = _interopRequireDefault(_Stripe);
 
-	var _ColorValue = __webpack_require__(49);
+	var _ColorValue = __webpack_require__(27);
 
 	var _ColorValue2 = _interopRequireDefault(_ColorValue);
 
@@ -105,7 +100,7 @@
 
 			this.el = document.querySelector(el);
 			this.panel = new _Panel2.default('#panel', color);
-			this.stripe = new _Stripe2.default('#stripe', color.h);
+			this.stripe = new _Stripe2.default('#stripe', color);
 			this.colorValue = new _ColorValue2.default('#colorValue', color);
 			this.init();
 		}
@@ -537,10 +532,6 @@
 		value: true
 	});
 
-	var _assign = __webpack_require__(25);
-
-	var _assign2 = _interopRequireDefault(_assign);
-
 	var _classCallCheck2 = __webpack_require__(2);
 
 	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
@@ -549,7 +540,7 @@
 
 	var _createClass3 = _interopRequireDefault(_createClass2);
 
-	var _util = __webpack_require__(47);
+	var _util = __webpack_require__(25);
 
 	var _util2 = _interopRequireDefault(_util);
 
@@ -565,8 +556,7 @@
 
 			this.el = document.querySelector(el);
 			this.ctx = this.el.getContext('2d');
-			this.color = (0, _assign2.default)({}, color);
-			this.color.h = this.color.h < 1 ? this.color.h * 360 : this.color.h;
+			this.color = _util2.default.rgb2HSB(color);
 			this.size = 500;
 		}
 
@@ -575,20 +565,26 @@
 			value: function init() {
 				this.el.height = this.size;
 				this.el.width = this.size;
-				this.render(this.color.h, this.color.s * this.size, this.color.l * 2 * this.size);
+				this.render(this.color.h, this.color.s * this.size, this.color.b * this.size);
 				//监听点击事件
 				this.el.addEventListener('click', function (e) {
 					var x = e.offsetX,
 					    y = e.offsetY;
-					this.render(this.color.h * 360, x, y);
+					this.render(this.color.h, x, y);
 					//触发颜色改变事件
-					_watcher2.default.trigger('colorChange', this.color);
+					var rgb = _util2.default.getRGBValue(this.ctx, x, y);
+					_watcher2.default.trigger('colorChange', rgb);
 				}.bind(this));
 			}
 		}, {
 			key: 'dealInput',
 			value: function dealInput(color) {
-				this.render(color.h * 360, color.s * this.size, color.l * 2 * this.size);
+				var _util$rgb2HSB = _util2.default.rgb2HSB(color),
+				    h = _util$rgb2HSB.h,
+				    s = _util$rgb2HSB.s,
+				    b = _util$rgb2HSB.b;
+
+				this.render(h, s * this.size, b * this.size);
 			}
 		}, {
 			key: 'render',
@@ -597,14 +593,10 @@
 	    * @param x range(0,500)
 	    * @param y range(0,500)
 	   */
-				this.color = {
-					h: h / 360,
-					s: y / this.size,
-					l: x / 2 / this.size
-				};
 				//绘制垂直方向饱和度渐变
+				this.color.h = h;
 				var sGradient = this.ctx.createLinearGradient(0, 0, 0, 500);
-				sGradient.addColorStop(0, 'hsl(' + h + ',0%,50%)');
+				sGradient.addColorStop(0, 'white');
 				sGradient.addColorStop(1, 'hsl(' + h + ',100%,50%)');
 				this.ctx.fillStyle = sGradient;
 				this.ctx.fillRect(0, 0, 500, 500);
@@ -629,272 +621,6 @@
 
 /***/ },
 /* 25 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(26), __esModule: true };
-
-/***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
-	__webpack_require__(27);
-	module.exports = __webpack_require__(9).Object.assign;
-
-/***/ },
-/* 27 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// 19.1.3.1 Object.assign(target, source)
-	var $export = __webpack_require__(7);
-
-	$export($export.S + $export.F, 'Object', {assign: __webpack_require__(28)});
-
-/***/ },
-/* 28 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	// 19.1.2.1 Object.assign(target, source, ...)
-	var getKeys  = __webpack_require__(29)
-	  , gOPS     = __webpack_require__(44)
-	  , pIE      = __webpack_require__(45)
-	  , toObject = __webpack_require__(46)
-	  , IObject  = __webpack_require__(33)
-	  , $assign  = Object.assign;
-
-	// should work with symbols and should have deterministic property order (V8 bug)
-	module.exports = !$assign || __webpack_require__(18)(function(){
-	  var A = {}
-	    , B = {}
-	    , S = Symbol()
-	    , K = 'abcdefghijklmnopqrst';
-	  A[S] = 7;
-	  K.split('').forEach(function(k){ B[k] = k; });
-	  return $assign({}, A)[S] != 7 || Object.keys($assign({}, B)).join('') != K;
-	}) ? function assign(target, source){ // eslint-disable-line no-unused-vars
-	  var T     = toObject(target)
-	    , aLen  = arguments.length
-	    , index = 1
-	    , getSymbols = gOPS.f
-	    , isEnum     = pIE.f;
-	  while(aLen > index){
-	    var S      = IObject(arguments[index++])
-	      , keys   = getSymbols ? getKeys(S).concat(getSymbols(S)) : getKeys(S)
-	      , length = keys.length
-	      , j      = 0
-	      , key;
-	    while(length > j)if(isEnum.call(S, key = keys[j++]))T[key] = S[key];
-	  } return T;
-	} : $assign;
-
-/***/ },
-/* 29 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// 19.1.2.14 / 15.2.3.14 Object.keys(O)
-	var $keys       = __webpack_require__(30)
-	  , enumBugKeys = __webpack_require__(43);
-
-	module.exports = Object.keys || function keys(O){
-	  return $keys(O, enumBugKeys);
-	};
-
-/***/ },
-/* 30 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var has          = __webpack_require__(31)
-	  , toIObject    = __webpack_require__(32)
-	  , arrayIndexOf = __webpack_require__(36)(false)
-	  , IE_PROTO     = __webpack_require__(40)('IE_PROTO');
-
-	module.exports = function(object, names){
-	  var O      = toIObject(object)
-	    , i      = 0
-	    , result = []
-	    , key;
-	  for(key in O)if(key != IE_PROTO)has(O, key) && result.push(key);
-	  // Don't enum bug & hidden keys
-	  while(names.length > i)if(has(O, key = names[i++])){
-	    ~arrayIndexOf(result, key) || result.push(key);
-	  }
-	  return result;
-	};
-
-/***/ },
-/* 31 */
-/***/ function(module, exports) {
-
-	var hasOwnProperty = {}.hasOwnProperty;
-	module.exports = function(it, key){
-	  return hasOwnProperty.call(it, key);
-	};
-
-/***/ },
-/* 32 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// to indexed object, toObject with fallback for non-array-like ES3 strings
-	var IObject = __webpack_require__(33)
-	  , defined = __webpack_require__(35);
-	module.exports = function(it){
-	  return IObject(defined(it));
-	};
-
-/***/ },
-/* 33 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// fallback for non-array-like ES3 and non-enumerable old V8 strings
-	var cof = __webpack_require__(34);
-	module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
-	  return cof(it) == 'String' ? it.split('') : Object(it);
-	};
-
-/***/ },
-/* 34 */
-/***/ function(module, exports) {
-
-	var toString = {}.toString;
-
-	module.exports = function(it){
-	  return toString.call(it).slice(8, -1);
-	};
-
-/***/ },
-/* 35 */
-/***/ function(module, exports) {
-
-	// 7.2.1 RequireObjectCoercible(argument)
-	module.exports = function(it){
-	  if(it == undefined)throw TypeError("Can't call method on  " + it);
-	  return it;
-	};
-
-/***/ },
-/* 36 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// false -> Array#indexOf
-	// true  -> Array#includes
-	var toIObject = __webpack_require__(32)
-	  , toLength  = __webpack_require__(37)
-	  , toIndex   = __webpack_require__(39);
-	module.exports = function(IS_INCLUDES){
-	  return function($this, el, fromIndex){
-	    var O      = toIObject($this)
-	      , length = toLength(O.length)
-	      , index  = toIndex(fromIndex, length)
-	      , value;
-	    // Array#includes uses SameValueZero equality algorithm
-	    if(IS_INCLUDES && el != el)while(length > index){
-	      value = O[index++];
-	      if(value != value)return true;
-	    // Array#toIndex ignores holes, Array#includes - not
-	    } else for(;length > index; index++)if(IS_INCLUDES || index in O){
-	      if(O[index] === el)return IS_INCLUDES || index || 0;
-	    } return !IS_INCLUDES && -1;
-	  };
-	};
-
-/***/ },
-/* 37 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// 7.1.15 ToLength
-	var toInteger = __webpack_require__(38)
-	  , min       = Math.min;
-	module.exports = function(it){
-	  return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
-	};
-
-/***/ },
-/* 38 */
-/***/ function(module, exports) {
-
-	// 7.1.4 ToInteger
-	var ceil  = Math.ceil
-	  , floor = Math.floor;
-	module.exports = function(it){
-	  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
-	};
-
-/***/ },
-/* 39 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var toInteger = __webpack_require__(38)
-	  , max       = Math.max
-	  , min       = Math.min;
-	module.exports = function(index, length){
-	  index = toInteger(index);
-	  return index < 0 ? max(index + length, 0) : min(index, length);
-	};
-
-/***/ },
-/* 40 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var shared = __webpack_require__(41)('keys')
-	  , uid    = __webpack_require__(42);
-	module.exports = function(key){
-	  return shared[key] || (shared[key] = uid(key));
-	};
-
-/***/ },
-/* 41 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var global = __webpack_require__(8)
-	  , SHARED = '__core-js_shared__'
-	  , store  = global[SHARED] || (global[SHARED] = {});
-	module.exports = function(key){
-	  return store[key] || (store[key] = {});
-	};
-
-/***/ },
-/* 42 */
-/***/ function(module, exports) {
-
-	var id = 0
-	  , px = Math.random();
-	module.exports = function(key){
-	  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
-	};
-
-/***/ },
-/* 43 */
-/***/ function(module, exports) {
-
-	// IE 8- don't enum bug keys
-	module.exports = (
-	  'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
-	).split(',');
-
-/***/ },
-/* 44 */
-/***/ function(module, exports) {
-
-	exports.f = Object.getOwnPropertySymbols;
-
-/***/ },
-/* 45 */
-/***/ function(module, exports) {
-
-	exports.f = {}.propertyIsEnumerable;
-
-/***/ },
-/* 46 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// 7.1.13 ToObject(argument)
-	var defined = __webpack_require__(35);
-	module.exports = function(it){
-	  return Object(defined(it));
-	};
-
-/***/ },
-/* 47 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -906,14 +632,15 @@
 		getRGBValue: function getRGBValue(ctx, x, y) {
 			var data = ctx.getImageData(x, y, 1, 1);
 			var color = "rgb(" + data.data[0] + "," + data.data[1] + "," + data.data[2] + ")";
-			return color.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",").map(function (str) {
+			color = color.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",").map(function (str) {
 				return parseInt(str);
 			});
+			return { r: color[0], g: color[1], b: color[2] };
 		},
-		rgb2Hex: function rgb2Hex(aColor) {
+		rgb2Hex: function rgb2Hex(color) {
 			var strHex = "#";
-			for (var i = 0; i < aColor.length; i++) {
-				var hex = aColor[i].toString(16);
+			for (var i = 0; i < color.length; i++) {
+				var hex = color[i].toString(16);
 				if (hex === "0") {
 					hex += hex;
 				}
@@ -935,11 +662,11 @@
 			var h,
 			    s,
 			    l = (max + min) / 2;
+			var d = max - min;
 
 			if (max == min) {
 				h = s = 0;
 			} else {
-				var d = max - min;
 				s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
 				switch (max) {
 					case r:
@@ -952,6 +679,32 @@
 				h /= 6;
 			}
 			return { h: h, s: s, l: l };
+		},
+		rgb2HSB: function rgb2HSB(color) {
+			var r = color.r,
+			    g = color.g,
+			    b = color.b;
+
+			r /= 255, g /= 255, b /= 255;
+			var min = Math.min(r, g, b),
+			    max = Math.max(r, g, b),
+			    d = max - min;
+			var h, s;
+
+			if (d == 0) {
+				h = s = 0;
+			} else {
+				s = d / max;
+				if (r == max) {
+					h = (g - b) / d;
+				} else if (g == max) {
+					h = 2 + (b - r) / d; // between cyan & yellow
+				} else {
+					h = 4 + (r - g) / d; // between magenta & cyan
+				}
+			}
+			h = (h * 60 + 360) % 360;
+			return { h: h, s: s, b: max };
 		},
 		HSL2rgb: function HSL2rgb(color) {
 			var h = color.h,
@@ -974,9 +727,12 @@
 			if (h < 0) h += 1;else if (h > 1) h -= 1;
 
 			if (6 * h < 1) v = p + (q - p) * h * 6;else if (2 * h < 1) v = q;else if (3 * h < 2) v = p + (q - p) * (2 / 3 - h) * 6;else v = p;
-			return (255 * v).toFixed(0);
+			return parseInt(255 * v);
 		},
 		isValid: function isValid(value, type) {
+			if (/\D/.test(value)) {
+				return false;
+			}
 			switch (type) {
 				case 'r':
 				case 'g':
@@ -994,7 +750,7 @@
 	};
 
 /***/ },
-/* 48 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1011,7 +767,7 @@
 
 	var _createClass3 = _interopRequireDefault(_createClass2);
 
-	var _util = __webpack_require__(47);
+	var _util = __webpack_require__(25);
 
 	var _util2 = _interopRequireDefault(_util);
 
@@ -1022,12 +778,15 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Stripe = function () {
-		function Stripe(el, hue) {
+		function Stripe(el, color) {
 			(0, _classCallCheck3.default)(this, Stripe);
+
+			var _util$rgb2HSB = _util2.default.rgb2HSB(color),
+			    h = _util$rgb2HSB.h;
 
 			this.el = document.querySelector(el);
 			this.ctx = this.el.getContext('2d');
-			this.hue = hue < 1 ? hue : hue / 360;
+			this.hue = h < 1 ? h : h / 360;
 			this.width = 25;
 			this.height = 500;
 		}
@@ -1047,7 +806,10 @@
 		}, {
 			key: 'dealInput',
 			value: function dealInput(color) {
-				this.render(color.h * this.height);
+				var _util$rgb2HSB2 = _util2.default.rgb2HSB(color),
+				    h = _util$rgb2HSB2.h;
+
+				this.render(h / 360 * this.height);
 			}
 		}, {
 			key: 'render',
@@ -1079,7 +841,7 @@
 	exports.default = Stripe;
 
 /***/ },
-/* 49 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1096,7 +858,7 @@
 
 	var _createClass3 = _interopRequireDefault(_createClass2);
 
-	var _util = __webpack_require__(47);
+	var _util = __webpack_require__(25);
 
 	var _util2 = _interopRequireDefault(_util);
 
@@ -1118,6 +880,7 @@
 			this.els.h = this.el.querySelector('#h');
 			this.els.s = this.el.querySelector('#s');
 			this.els.l = this.el.querySelector('#l');
+			this.model = {};
 			this.init();
 			this.change(color);
 		}
@@ -1130,23 +893,21 @@
 		}, {
 			key: 'change',
 			value: function change(color) {
-				var h = color.h,
-				    s = color.s,
-				    l = color.l;
+				var r = color.r,
+				    g = color.g,
+				    b = color.b;
 
-				var _util$HSL2rgb = _util2.default.HSL2rgb(color),
-				    r = _util$HSL2rgb.r,
-				    g = _util$HSL2rgb.g,
-				    b = _util$HSL2rgb.b;
+				var _util$rgb2HSL = _util2.default.rgb2HSL(color),
+				    h = _util$rgb2HSL.h,
+				    s = _util$rgb2HSL.s,
+				    l = _util$rgb2HSL.l;
 
-				this.model = {
-					r: r,
-					g: g,
-					b: b,
-					h: h,
-					s: s,
-					l: l
-				};
+				this.model.r = r;
+				this.model.g = g;
+				this.model.b = b;
+				this.model.h = h;
+				this.model.s = s;
+				this.model.l = l;
 				this.render();
 			}
 		}, {
@@ -1163,29 +924,29 @@
 				this.els.r.value = r;
 				this.els.g.value = g;
 				this.els.b.value = b;
-				this.els.h.value = h;
-				this.els.s.value = s;
-				this.els.l.value = l;
+				this.els.h.value = h.toFixed(2).replace(/\.?0*$/g, '');
+				this.els.s.value = s.toFixed(2).replace(/\.?0*$/g, '');
+				this.els.l.value = l.toFixed(2).replace(/\.?0*$/g, '');
 			}
 		}, {
 			key: 'dealInput',
 			value: function dealInput(e) {
 				var target = e.srcElement;
-				var input = parseFloat(target.value);
+				var input = target.value;
 				var validation = _util2.default.isValid(input, target.id);
 				if (!validation) {
 					alert('Invalid input!');
 					return;
 				}
-				this.model[target.id] = input;
+				this.model[target.id] = parseFloat(input);
 				switch (target.id) {
 					case 'r':
 					case 'g':
 					case 'b':
-						var _util$rgb2HSL = _util2.default.rgb2HSL(this.model),
-						    h = _util$rgb2HSL.h,
-						    s = _util$rgb2HSL.s,
-						    l = _util$rgb2HSL.l;
+						var _util$rgb2HSL2 = _util2.default.rgb2HSL(this.model),
+						    h = _util$rgb2HSL2.h,
+						    s = _util$rgb2HSL2.s,
+						    l = _util$rgb2HSL2.l;
 
 						this.model.h = h;
 						this.model.s = s;
@@ -1194,10 +955,10 @@
 					case 'h':
 					case 's':
 					case 'l':
-						var _util$HSL2rgb2 = _util2.default.HSL2rgb(this.model),
-						    r = _util$HSL2rgb2.r,
-						    g = _util$HSL2rgb2.g,
-						    b = _util$HSL2rgb2.b;
+						var _util$HSL2rgb = _util2.default.HSL2rgb(this.model),
+						    r = _util$HSL2rgb.r,
+						    g = _util$HSL2rgb.g,
+						    b = _util$HSL2rgb.b;
 
 						this.model.r = r;
 						this.model.g = g;
@@ -1235,10 +996,10 @@
 			value: function set(type, data) {
 				type = type.toLowerCase();
 				if (type === 'rgb') {
-					data = _util2.default.rgb2HSL(data);
 					this.change(data);
 					_watcher2.default.trigger('input', this.model);
 				} else if (type === 'hsl') {
+					data = _util2.default.rgb2HSL(data);
 					this.change(data);
 					_watcher2.default.trigger('input', this.model);
 				} else {

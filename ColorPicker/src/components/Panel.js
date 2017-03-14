@@ -4,39 +4,36 @@ export default class Panel {
 	constructor(el,color) {
 		this.el = document.querySelector(el);
 		this.ctx = this.el.getContext('2d');
-		this.color = Object.assign({},color);
-		this.color.h = this.color.h < 1 ? this.color.h*360 : this.color.h;
+		this.color = util.rgb2HSB(color);
 		this.size = 500;
 	}
 	init() {
 		this.el.height = this.size;
 		this.el.width = this.size;
-		this.render(this.color.h,this.color.s*this.size,this.color.l*2*this.size);
+		this.render(this.color.h,this.color.s*this.size,this.color.b*this.size);
 		//监听点击事件
 		this.el.addEventListener('click',function (e) {
 			var x = e.offsetX,
 				y = e.offsetY;
-			this.render(this.color.h*360,x,y);
+			this.render(this.color.h,x,y);
 			//触发颜色改变事件
-			watcher.trigger('colorChange',this.color);
+			var rgb = util.getRGBValue(this.ctx,x,y);
+			watcher.trigger('colorChange',rgb);
 		}.bind(this));
 	}
 	dealInput(color) {
-		this.render(color.h*360,color.s*this.size,color.l*2*this.size);
+		var {h,s,b} = util.rgb2HSB(color);
+		this.render(h,s*this.size,b*this.size);
 	}
 	render(h,x,y) {
 		/* @param h range(0,360)
 		 * @param x range(0,500)
 		 * @param y range(0,500)
 		*/
-		this.color = {
-			h: h/360,
-			s: y/this.size,
-			l: x/2/this.size
-		};
 		//绘制垂直方向饱和度渐变
+		this.color.h = h;
 		var sGradient = this.ctx.createLinearGradient(0, 0, 0, 500);
-		sGradient.addColorStop(0, `hsl(${h},0%,50%)`);
+		sGradient.addColorStop(0, 'white');
 		sGradient.addColorStop(1, `hsl(${h},100%,50%)`);
 		this.ctx.fillStyle = sGradient;
 		this.ctx.fillRect(0, 0, 500, 500);
