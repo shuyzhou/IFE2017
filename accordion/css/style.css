@@ -1,0 +1,31 @@
+body {
+	margin: 0;
+	padding: 0;
+}
+#accordion .wrapper {
+	width: 540px;
+	margin: 10px auto;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+}
+#accordion label{
+	font-size: 18px;
+	line-height: 30px;
+	padding: 0 10px;
+	background-color: #eee;
+	display: block;
+}
+#accordion label:hover, #accordion input[name="panel"]:checked + label{
+	text-decoration: underline;
+}
+#accordion input[name="panel"] {
+	display: none;
+}
+#accordion p {
+	margin: 15px 10px;
+	text-indent: 20px;
+	display: none;
+}
+#accordion input[name="panel"]:checked ~ p{
+	display: block;
+}
