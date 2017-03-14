@@ -10,6 +10,7 @@ export default class ColorValue {
 		this.els.h = this.el.querySelector('#h');
 		this.els.s = this.el.querySelector('#s');
 		this.els.l = this.el.querySelector('#l');
+		this.model = {};
 		this.init();
 		this.change(color);
 	}
@@ -19,14 +20,12 @@ export default class ColorValue {
 	change(color) {
 		var {h,s,l} = color;
 		var {r,g,b} = util.HSL2rgb(color);
-		this.model = {
-			r:r,
-			g:g,
-			b:b,
-			h:h,
-			s:s,
-			l:l
-		};
+		this.model.r = r;
+		this.model.g = g;
+		this.model.b = b;
+		this.model.h = h;
+		this.model.s = s;
+		this.model.l = l;
 		this.render();
 	}
 	render() {

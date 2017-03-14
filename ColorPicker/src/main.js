@@ -4,8 +4,3 @@ var picker = new Picker('#picker',{
 	s:1,
 	l:0.5
 });
-picker.set('rgb',{
-	r:45,
-	g:66,
-	b:218
-});

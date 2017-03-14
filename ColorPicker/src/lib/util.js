@@ -76,7 +76,7 @@ export default {
 			v = p + (q - p) * (2/3 - h) * 6;
 		else
 			v = p;
-		return (255 * v).toFixed(0);
+		return parseInt(255 * v);
 	},
 	isValid: function(value,type){
 		switch (type) {
