@@ -106,7 +106,7 @@ export default {
 		return parseInt(255 * v);
 	},
 	isValid: function(value,type){
-		if(/\D/.test(value)){
+		if(Number.isFinite(value)){
 			return false;
 		}
 		switch (type) {
