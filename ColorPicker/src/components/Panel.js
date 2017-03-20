@@ -5,7 +5,7 @@ export default class Panel {
 		this.el = document.querySelector(el);
 		this.ctx = this.el.getContext('2d');
 		this.color = util.rgb2HSB(color);
-		this.size = 500;console.log(this.color);
+		this.size = 500;
 	}
 	init() {
 		this.el.height = this.size;

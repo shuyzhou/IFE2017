@@ -15,7 +15,7 @@ export default class ColorValue {
 		this.pick(color);
 	}
 	init() {
-		this.el.addEventListener('input',this.dealInput.bind(this));
+		this.el.addEventListener('keypress',this.dealInput.bind(this));
 	}
 	pick(color) {
 		var {r,g,b} = color;
@@ -38,6 +38,9 @@ export default class ColorValue {
 		this.els.l.value = l.toFixed(2).replace(/\.?0*$/g,'');
 	}
 	dealInput(e) {
+		if(e.keyCode !== 13){
+			return;
+		}
 		var target = e.srcElement;
 		var input = target.value;
 		var validation = util.isValid(input,target.id);
