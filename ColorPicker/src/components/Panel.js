@@ -5,7 +5,7 @@ export default class Panel {
 		this.el = document.querySelector(el);
 		this.ctx = this.el.getContext('2d');
 		this.color = util.rgb2HSB(color);
-		this.size = 500;
+		this.size = 500;console.log(this.color);
 	}
 	init() {
 		this.el.height = this.size;
@@ -25,7 +25,7 @@ export default class Panel {
 		var {h,s,b} = util.rgb2HSB(color);
 		this.render(h,s*this.size,b*this.size);
 	}
-	render(h,x,y) {
+	render(h,x = 500,y = 500) {
 		/* @param h range(0,360)
 		 * @param x range(0,500)
 		 * @param y range(0,500)

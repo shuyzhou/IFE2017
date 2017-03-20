@@ -11,8 +11,9 @@ export default class Picker {
 		this.init();
 	}
 	init() {
-		watcher.listen('areaChange',this.panel.render,this.panel);
-		watcher.listen('colorChange',this.colorValue.change,this.colorValue);
+		watcher.listen('hueChange',this.panel.render,this.panel);
+		watcher.listen('hueChange',this.colorValue.hueChange,this.colorValue);
+		watcher.listen('colorChange',this.colorValue.pick,this.colorValue);
 		watcher.listen('input',this.stripe.dealInput,this.stripe);
 		watcher.listen('input',this.panel.dealInput,this.panel);
 		this.stripe.init();

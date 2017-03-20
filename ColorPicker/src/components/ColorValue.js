@@ -12,12 +12,12 @@ export default class ColorValue {
 		this.els.l = this.el.querySelector('#l');
 		this.model = {};
 		this.init();
-		this.change(color);
+		this.pick(color);
 	}
 	init() {
 		this.el.addEventListener('input',this.dealInput.bind(this));
 	}
-	change(color) {
+	pick(color) {
 		var {r,g,b} = color;
 		var {h,s,l} = util.rgb2HSL(color);
 		this.model.r = r;
@@ -45,27 +45,14 @@ export default class ColorValue {
 			alert('Invalid input!');
 			return;
 		}
-		this.model[target.id] = parseFloat(input);
-		switch (target.id) {
-			case 'r':
-			case 'g':
-			case 'b':
-				var {h,s,l} = util.rgb2HSL(this.model);
-				this.model.h = h;
-				this.model.s = s;
-				this.model.l = l;
-				break;
-			case 'h':
-			case 's':
-			case 'l':
-				var {r,g,b} = util.HSL2rgb(this.model);
-				this.model.r = r;
-				this.model.g = g;
-				this.model.b = b;
-				break;
-		}
-		this.render();
+		this.set(parseFloat(input),target.id)
 		watcher.trigger('input',this.model);
+	}
+	hueChange(hue) {
+		hue = hue/360;
+		this.set(hue,'h');
+		this.set(1,'s');
+		this.set(0.5,'l');
 	}
 	get(type) {
 		type = type.toLowerCase();
@@ -88,19 +75,28 @@ export default class ColorValue {
 				throw Error('Invalid parameter!');
 		}
 	}
-	set(type,data) {
+	set(data,type) {
 		type = type.toLowerCase();
-		if(type === 'rgb'){
-			this.change(data);
-			watcher.trigger('input',this.model);
+		if(type)
+		this.model[type] = data;
+		switch (type) {
+			case 'r':
+			case 'g':
+			case 'b':
+				var {h,s,l} = util.rgb2HSL(this.model);
+				this.model.h = h;
+				this.model.s = s;
+				this.model.l = l;
+				break;
+			case 'h':
+			case 's':
+			case 'l':
+				var {r,g,b} = util.HSL2rgb(this.model);
+				this.model.r = r;
+				this.model.g = g;
+				this.model.b = b;
+				break;
 		}
-		else if(type === 'hsl'){
-			data = util.rgb2HSL(data);
-			this.change(data);
-			watcher.trigger('input',this.model);
-		}
-		else {
-			throw Error('Invalid parameter!');
-		}
+		this.render();
 	}
 } 

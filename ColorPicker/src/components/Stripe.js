@@ -16,7 +16,7 @@ export default class Stripe {
 			var y = e.offsetY;
 			this.render(y);
 			//触发色带改变事件
-			watcher.trigger('areaChange',(y/this.height)*360);
+			watcher.trigger('hueChange',(y/this.height)*360);
 		}.bind(this));
 	}
 	dealInput(color) {
