@@ -108,8 +108,9 @@
 		(0, _createClass3.default)(Picker, [{
 			key: 'init',
 			value: function init() {
-				_watcher2.default.listen('areaChange', this.panel.render, this.panel);
-				_watcher2.default.listen('colorChange', this.colorValue.change, this.colorValue);
+				_watcher2.default.listen('hueChange', this.panel.render, this.panel);
+				_watcher2.default.listen('hueChange', this.colorValue.hueChange, this.colorValue);
+				_watcher2.default.listen('colorChange', this.colorValue.pick, this.colorValue);
 				_watcher2.default.listen('input', this.stripe.dealInput, this.stripe);
 				_watcher2.default.listen('input', this.panel.dealInput, this.panel);
 				this.stripe.init();
@@ -584,11 +585,14 @@
 				    s = _util$rgb2HSB.s,
 				    b = _util$rgb2HSB.b;
 
-				this.render(h, s * this.size, b * this.size);
+				this.render(h, b * this.size, s * this.size);
 			}
 		}, {
 			key: 'render',
-			value: function render(h, x, y) {
+			value: function render(h) {
+				var x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
+				var y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
+
 				/* @param h range(0,360)
 	    * @param x range(0,500)
 	    * @param y range(0,500)
@@ -729,23 +733,17 @@
 			if (6 * h < 1) v = p + (q - p) * h * 6;else if (2 * h < 1) v = q;else if (3 * h < 2) v = p + (q - p) * (2 / 3 - h) * 6;else v = p;
 			return parseInt(255 * v);
 		},
-		isValid: function isValid(value, type) {
-			if (/\D/.test(value)) {
-				return false;
-			}
+		fixInput: function fixInput(value, type) {
 			switch (type) {
 				case 'r':
 				case 'g':
 				case 'b':
-					if (value >= 0 && value <= 255) return true;
-					break;
+					return value = value < 0 ? 0 : value > 255 ? 255 : value;
 				case 'h':
 				case 's':
-					if (value >= 0 && value <= 1) return true;break;
 				case 'l':
-					if (value >= 0 && value <= 0.5) return true;break;
+					return value = value < 0 ? 0 : value > 1 ? 1 : value;
 			}
-			return false;
 		}
 	};
 
@@ -800,7 +798,7 @@
 					var y = e.offsetY;
 					this.render(y);
 					//触发色带改变事件
-					_watcher2.default.trigger('areaChange', y / this.height * 360);
+					_watcher2.default.trigger('hueChange', y / this.height * 360);
 				}.bind(this));
 			}
 		}, {
@@ -882,17 +880,18 @@
 			this.els.l = this.el.querySelector('#l');
 			this.model = {};
 			this.init();
-			this.change(color);
+			this.pick(color);
 		}
 
 		(0, _createClass3.default)(ColorValue, [{
 			key: 'init',
 			value: function init() {
-				this.el.addEventListener('input', this.dealInput.bind(this));
+				this.el.addEventListener('keypress', this.dealInput.bind(this));
+				this.el.addEventListener('click', this.dealClick.bind(this));
 			}
 		}, {
-			key: 'change',
-			value: function change(color) {
+			key: 'pick',
+			value: function pick(color) {
 				var r = color.r,
 				    g = color.g,
 				    b = color.b;
@@ -931,15 +930,83 @@
 		}, {
 			key: 'dealInput',
 			value: function dealInput(e) {
-				var target = e.srcElement;
-				var input = target.value;
-				var validation = _util2.default.isValid(input, target.id);
-				if (!validation) {
-					alert('Invalid input!');
+				if (e.keyCode !== 13) {
 					return;
 				}
-				this.model[target.id] = parseFloat(input);
-				switch (target.id) {
+				var target = e.target;
+				var input = target.value;
+				this.set(parseFloat(input), target.id);
+			}
+		}, {
+			key: 'dealClick',
+			value: function dealClick(e) {
+				var target = e.target;
+				if (target.tagName.toLowerCase() === 'button') {
+					var type = target.getAttribute("data-for");
+					var oldValue = parseFloat(this.els[type].value);
+					var operation = target.className;
+					var method = {
+						plus: function plus(value, accuracy) {
+							return value + accuracy;
+						},
+						minus: function minus(value, accuracy) {
+							return value - accuracy;
+						}
+					};
+					var value;
+					switch (type) {
+						case 'r':
+						case 'g':
+						case 'b':
+							value = method[operation](oldValue, 1);
+							break;
+						case 'h':
+						case 's':
+						case 'l':
+							value = method[operation](oldValue, 0.01);
+							break;
+					}
+					this.set(value, type);
+				}
+			}
+		}, {
+			key: 'hueChange',
+			value: function hueChange(hue) {
+				hue = hue / 360;
+				this.set(hue, 'h');
+				this.set(1, 's');
+				this.set(0.5, 'l');
+			}
+		}, {
+			key: 'get',
+			value: function get(type) {
+				type = type.toLowerCase();
+				switch (type) {
+					case 'rgb':
+						return {
+							r: this.model.r,
+							g: this.model.g,
+							b: this.model.b
+						};break;
+					case 'hsl':
+						return {
+							h: this.model.h,
+							s: this.model.s,
+							l: this.model.l
+						};break;
+					case 'hex':
+						return _util2.default.rgb2Hex([this.model, r, this.model, g, this.model, b]);break;
+					case 'default':
+						throw Error('Invalid parameter!');
+				}
+			}
+		}, {
+			key: 'set',
+			value: function set(data, type) {
+				type = type.toLowerCase();
+				data = _util2.default.fixInput(data, type);
+				this.model[type] = data;
+				switch (type) {
 					case 'r':
 					case 'g':
 					case 'b':
@@ -967,44 +1034,6 @@
 				}
 				this.render();
 				_watcher2.default.trigger('input', this.model);
-			}
-		}, {
-			key: 'get',
-			value: function get(type) {
-				type = type.toLowerCase();
-				switch (type) {
-					case 'rgb':
-						return {
-							r: this.model.r,
-							g: this.model.g,
-							b: this.model.b
-						};break;
-					case 'hsl':
-						return {
-							h: this.model.h,
-							s: this.model.s,
-							l: this.model.l
-						};break;
-					case 'hex':
-						return _util2.default.rgb2Hex([this.model, r, this.model, g, this.model, b]);break;
-					case 'default':
-						throw Error('Invalid parameter!');
-				}
-			}
-		}, {
-			key: 'set',
-			value: function set(type, data) {
-				type = type.toLowerCase();
-				if (type === 'rgb') {
-					this.change(data);
-					_watcher2.default.trigger('input', this.model);
-				} else if (type === 'hsl') {
-					data = _util2.default.rgb2HSL(data);
-					this.change(data);
-					_watcher2.default.trigger('input', this.model);
-				} else {
-					throw Error('Invalid parameter!');
-				}
 			}
 		}]);
 		return ColorValue;

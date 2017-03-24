@@ -1,3 +1,8 @@
+* {
+	margin: 0;
+	border-width: 0;
+	padding: 0;
+}
 #picker {
 	width: 700px;
 	position: relative;
@@ -22,10 +27,36 @@
 	width: 85px;
 	line-height:70px;
 	font-size: 20px;
-	margin: 5px;
+	margin: 6px 0;
 	border: 1px solid #ccc;
 	border-radius: 3px;
 	padding-left: 20px; 
 	display: inline-block;
 	vertical-align: middle;
+}
+#picker .buttonWrap {
+	margin-left: -42px;
+	border-left: 1px solid #ccc;
+	display: inline-block;
+	vertical-align: middle;
+}
+#picker button{
+	width: 35px;
+	height: 35px;
+	outline-color: #ccc;
+	background-color: transparent;
+	display: block;
+}
+#picker .plus::after, #picker .minus::after{
+	content: " ";
+	margin: 0 auto;
+	display: table;
+	border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+}
+#picker .plus::after{
+	border-bottom:8px solid #ccc;
+}
+#picker .minus::after{
+	border-top:8px solid #ccc;
 }

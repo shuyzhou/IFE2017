@@ -23,7 +23,7 @@ export default class Panel {
 	}
 	dealInput(color) {
 		var {h,s,b} = util.rgb2HSB(color);
-		this.render(h,s*this.size,b*this.size);
+		this.render(h,b*this.size,s*this.size);
 	}
 	render(h,x = 500,y = 500) {
 		/* @param h range(0,360)

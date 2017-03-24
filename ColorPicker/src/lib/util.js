@@ -105,22 +105,16 @@ export default {
 			v = p;
 		return parseInt(255 * v);
 	},
-	isValid: function(value,type){
-		if(Number.isFinite(value)){
-			return false;
-		}
+	fixInput: function(value,type){
 		switch (type) {
 			case 'r':
 			case 'g':
 			case 'b':
-				if(value >= 0 && value <= 255)return true;
-				break;
+				return value = (value < 0) ? 0 : (value > 255) ? 255 : value;
 			case 'h':
 			case 's':
-				if(value >= 0 && value <= 1)return true;break;
 			case 'l':
-				if(value >= 0 && value <= 0.5)return true;break;
+				return value = (value < 0) ? 0 : (value > 1) ? 1 : value;
 		}
-		return false;
 	}
 }

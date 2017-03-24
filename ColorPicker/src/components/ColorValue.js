@@ -16,6 +16,7 @@ export default class ColorValue {
 	}
 	init() {
 		this.el.addEventListener('keypress',this.dealInput.bind(this));
+		this.el.addEventListener('click',this.dealClick.bind(this));
 	}
 	pick(color) {
 		var {r,g,b} = color;
@@ -41,15 +42,39 @@ export default class ColorValue {
 		if(e.keyCode !== 13){
 			return;
 		}
-		var target = e.srcElement;
+		var target = e.target;
 		var input = target.value;
-		var validation = util.isValid(input,target.id);
-		if(!validation){
-			alert('Invalid input!');
-			return;
-		}
 		this.set(parseFloat(input),target.id)
-		watcher.trigger('input',this.model);
+	}
+	dealClick(e) {
+		var target = e.target;
+		if (target.tagName.toLowerCase() === 'button') {
+			var type = target.getAttribute("data-for");
+			var oldValue = parseFloat(this.els[type].value);
+			var operation = target.className;
+			var method = {
+				plus: function (value,accuracy) {
+					return value + accuracy;
+				},
+				minus: function (value,accuracy) {
+					return value - accuracy;
+				}
+			};
+			var value;
+			switch (type) {
+				case 'r':
+				case 'g':
+				case 'b':
+					value = method[operation](oldValue,1);
+					break;
+				case 'h':
+				case 's':
+				case 'l':
+					value = method[operation](oldValue,0.01);
+					break;
+			}
+			this.set(value,type);
+		}
 	}
 	hueChange(hue) {
 		hue = hue/360;
@@ -80,7 +105,7 @@ export default class ColorValue {
 	}
 	set(data,type) {
 		type = type.toLowerCase();
-		if(type)
+		data = util.fixInput(data,type);
 		this.model[type] = data;
 		switch (type) {
 			case 'r':
@@ -101,5 +126,6 @@ export default class ColorValue {
 				break;
 		}
 		this.render();
+		watcher.trigger('input',this.model);
 	}
 } 
