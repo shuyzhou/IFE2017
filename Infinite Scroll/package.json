@@ -1,0 +1,14 @@
+{
+  "name": "scroll",
+  "version": "1.0.0",
+  "description": "IFE2017",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "shuyzhou",
+  "license": "MIT",
+  "devDependencies": {
+    "browser-sync": "^2.18.8",
+    "gulp": "^3.9.1"
+  }
+}
