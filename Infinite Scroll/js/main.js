@@ -8,9 +8,7 @@ var appFactory = function (id,base,data,size) {
 		size: size,
 		init: function (){
 			var self = this;
-			for (; i < this.size; i++) {
-				imageFactory(base+data[i].src,data[i].caption,wrapper);
-			}
+			this.add();
 			wrapper.onscroll = function () {
 				if (isBottom()) {
 					self.add();
@@ -18,9 +16,11 @@ var appFactory = function (id,base,data,size) {
 			}
 		},
 		add: function (){
+			var fragment = document.createDocumentFragment();
 			for (var len = 0;len < this.size && i < data.length; len++,i++) {
-				imageFactory(base+data[i].src,data[i].caption,wrapper);
+				fragment.appendChild(imageFactory(base+data[i].src,data[i].caption));
 			}
+			wrapper.appendChild(fragment);
 		}
 	}
 }

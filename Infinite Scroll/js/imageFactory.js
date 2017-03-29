@@ -1,4 +1,4 @@
-var imageFactory = function (src,caption,wrapper) {
+var imageFactory = function (src,caption) {
 	var imgNode = document.createElement('img');
 	var spanNode = document.createElement('span');
 	var li = document.createElement('li');
@@ -8,5 +8,5 @@ var imageFactory = function (src,caption,wrapper) {
 	li.appendChild(imgNode);
 	li.appendChild(spanNode);
 	imgNode.src = src;
-	wrapper.appendChild(li);
+	return li;
 }
