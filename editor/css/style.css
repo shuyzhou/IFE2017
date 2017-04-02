@@ -1,0 +1,21 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+#in {
+	width: 50%;
+	height: 100%;
+	outline: none;
+	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Droid Sans Mono', 'Consolas';
+	font-size: 14px;
+	color: #fff;
+	background-color: #333;
+	resize:none;
+	float: left;
+}
+#out {
+	width: 50%;
+	height: 100%;
+	float: left;
+	box-sizing: border-box;
+}
