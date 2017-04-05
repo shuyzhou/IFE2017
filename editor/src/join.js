@@ -1,9 +1,10 @@
+var escapeCode = require('./escapeCode.js');
 var getContent = {
 	'head': function (i,group) {
 		return '<' + group[i].type + '>' + group[i].value + '</' + group[i].type + '>';
 	},
-	'code': function (i,group) {
-		var code = '<pre><code>' + escape(group[i].value) + '</code></pre>';
+	'codeBlock': function (i,group) {
+		var code = '<pre><code>' + escapeCode(group[i].value) + '</code></pre>';
 		return code;
 	},
 	'blockquote': function (i,group) {
@@ -68,13 +69,6 @@ function join (group) {
 		html += getContent[group[i].type](i,group);
 	}
 	return html;
-}
-
-function escape(str) {
-	return str
-			.replace(/&/g,'&amp;')
-			.replace(/</g,'&lt;')
-			.replace(/>/g,'&gt;');
 }
 
 module.exports = join;

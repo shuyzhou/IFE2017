@@ -1,3 +1,4 @@
+var escapeCode = require('./escapeCode.js');
 Function.prototype.after = function(fn) {
 	var self = this;
 	return function () {
@@ -10,11 +11,12 @@ Function.prototype.after = function(fn) {
 		}
 	}
 };
-var matchChain = matchCode.after(matchBlock).after(matchHead).after(matchList).after(matchLineFeed).after(matchParagraph);
+var matchChain = matchCodeBlock.after(matchBlock).after(matchHead).after(matchList).after(matchLineFeed).after(matchParagraph);
 
 function tokenize (md) {
 	var result = [];
 	var matches;
+	md = matchInlineCode(md);
 	while ( md ) {
 		var res = matchChain(md);
 		md = res.sofar;
@@ -22,8 +24,25 @@ function tokenize (md) {
 	}
 	return result;
 }
+function matchInlineCode(str) {
+	var codeExp = /(`+)([^`])?(.*?)([^`])\1(?:[^`]|$)/g;
+	return str.replace(codeExp,function (match,p1,p2,p3,p4) {
+		var code = '';
+		if(p3){
+			code = p3;
+		}
+		if(p2 && p2 !== ' '){
+			code = p2 + code;
+		}
+		if(p4 && p4 !== ' '){
+			code = code + p4;
+		}
+		code = escapeCode(code);
+		return '<code>' + code + '</code>';
+	});
+}
 
-function matchCode(md) {
+function matchCodeBlock(md) {
 	var codeExp = /^(?:(?:\t|\s{4}).*?(?:\n|$))+/;
 	var match;
 	if((match = codeExp.exec(md))){
@@ -31,7 +50,7 @@ function matchCode(md) {
 		return {
 			sofar: md,
 			matches: {
-				type: 'code',
+				type: 'codeBlock',
 				value: match[0]
 			}
 		};
