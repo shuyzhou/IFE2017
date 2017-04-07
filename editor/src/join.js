@@ -4,8 +4,8 @@ var getContent = {
 		return '<' + group[i].type + '>' + group[i].value + '</' + group[i].type + '>';
 	},
 	'codeBlock': function (i,group) {
-		var code = '<pre><code>' + escapeCode(group[i].value) + '</code></pre>';
-		return code;
+		var code = hljs.highlightAuto(group[i].value).value;
+		return '<pre><code>' + code + '</pre></code>';
 	},
 	'blockquote': function (i,group) {
 		var inner = group[i].value;
@@ -33,7 +33,7 @@ var getContent = {
 		while(group[i+1] && group[i+1].type === 'p'){
 			inner += group.splice(i+1,1)[0].value;
 		}
-		return '<p>' + inner + '</p>';
+		return '<p>' + 	matchInlineCode(inner) + '</p>';
 	},
 	'feed': function () {
 		return '';
@@ -62,6 +62,23 @@ var getContent = {
 	'h6': function (i,group) {
 		return this.head(i,group);
 	}
+}
+function matchInlineCode(str) {
+	var codeExp = /(`+)([^`])?(.*?)([^`])\1([^`]|$)/g;
+	return str.replace(codeExp,function (match,p1,p2,p3,p4,p5) {
+		var code = '';
+		if(p3){
+			code = p3;
+		}
+		if(p2 && p2 !== ' '){
+			code = p2 + code;
+		}
+		if(p4 && p4 !== ' '){
+			code = code + p4;
+		}
+		code = escapeCode(code);
+		return '<code>' + code + '</code>' + p5;
+	});
 }
 function join (group) {
 	var html = '';

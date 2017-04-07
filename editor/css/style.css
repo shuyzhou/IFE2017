@@ -17,5 +17,11 @@
 	width: 50%;
 	height: 100%;
 	float: left;
+	overflow: auto;
 	box-sizing: border-box;
+}
+blockquote {
+	border-left: 7px solid #999;
+    padding-left: 10px;
+    background-color: #ddd;
 }

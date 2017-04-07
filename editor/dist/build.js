@@ -89,8 +89,8 @@ var getContent = {
 		return '<' + group[i].type + '>' + group[i].value + '</' + group[i].type + '>';
 	},
 	'codeBlock': function (i,group) {
-		var code = '<pre><code>' + escapeCode(group[i].value) + '</code></pre>';
-		return code;
+		var code = hljs.highlightAuto(group[i].value).value;
+		return '<pre><code>' + code + '</pre></code>';
 	},
 	'blockquote': function (i,group) {
 		var inner = group[i].value;
@@ -118,7 +118,7 @@ var getContent = {
 		while(group[i+1] && group[i+1].type === 'p'){
 			inner += group.splice(i+1,1)[0].value;
 		}
-		return '<p>' + inner + '</p>';
+		return '<p>' + 	matchInlineCode(inner) + '</p>';
 	},
 	'feed': function () {
 		return '';
@@ -148,6 +148,23 @@ var getContent = {
 		return this.head(i,group);
 	}
 }
+function matchInlineCode(str) {
+	var codeExp = /(`+)([^`])?(.*?)([^`])\1([^`]|$)/g;
+	return str.replace(codeExp,function (match,p1,p2,p3,p4,p5) {
+		var code = '';
+		if(p3){
+			code = p3;
+		}
+		if(p2 && p2 !== ' '){
+			code = p2 + code;
+		}
+		if(p4 && p4 !== ' '){
+			code = code + p4;
+		}
+		code = escapeCode(code);
+		return '<code>' + code + '</code>' + p5;
+	});
+}
 function join (group) {
 	var html = '';
 	for (var i = 0; i < group.length; i++) {
@@ -162,7 +179,7 @@ module.exports = join;
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var escapeCode = __webpack_require__(0);
+//AOP实现职责链
 Function.prototype.after = function(fn) {
 	var self = this;
 	return function () {
@@ -175,12 +192,13 @@ Function.prototype.after = function(fn) {
 		}
 	}
 };
+var escapeCode = __webpack_require__(0);
 var matchChain = matchCodeBlock.after(matchBlock).after(matchHead).after(matchList).after(matchLineFeed).after(matchParagraph);
 
 function tokenize (md) {
 	var result = [];
 	var matches;
-	md = matchInlineCode(md);
+	md = matchLink(md);
 	while ( md ) {
 		var res = matchChain(md);
 		md = res.sofar;
@@ -188,22 +206,24 @@ function tokenize (md) {
 	}
 	return result;
 }
-function matchInlineCode(str) {
-	var codeExp = /(`+)([^`])?(.*?)([^`])\1(?:[^`]|$)/g;
-	return str.replace(codeExp,function (match,p1,p2,p3,p4) {
-		var code = '';
-		if(p3){
-			code = p3;
-		}
-		if(p2 && p2 !== ' '){
-			code = p2 + code;
-		}
-		if(p4 && p4 !== ' '){
-			code = code + p4;
-		}
-		code = escapeCode(code);
-		return '<code>' + code + '</code>';
+
+function matchLink(str) {
+	var inlineLinkExp = /\[(.*?)\]\((.*?)\s?(?:\"(.*?)\")?\)/g;
+	var refLinkExp = /\[(.+?)\](\[.+?\])/g;
+	str = str.replace(inlineLinkExp,function (match,p1,p2,p3) {
+		return `<a href="${p2||''}"${p3 && ` title=${p3}`||''}>${p1||''}</a>`;
 	});
+	str = str.replace(refLinkExp,function (s,p1,p2) {
+		var refExp = p2 || p1 + ': (.+?)[\s\t\n]';
+		var match;
+		if((match = refExp.exec(str))){
+			return `<a href="${match[1]}">${p1}</a>`;
+		}
+		else {
+			return s;
+		}
+	});
+	return str;
 }
 
 function matchCodeBlock(md) {
@@ -224,7 +244,7 @@ function matchCodeBlock(md) {
 	}
 }
 function matchBlock(md) {
-	var blockExp = /^> (?:.|\n)*?(?:\n(?:\t|\s)\n|$)/;
+	var blockExp = /^(?:>\s(?:.|\n)*?(?:\n(?:\t|\s)*\n|$))+/;
 	var match;
 	var value;
 	if((match = blockExp.exec(md))) {
@@ -245,7 +265,7 @@ function matchBlock(md) {
 }
 
 function matchHead(md) {
-	var headExp = /^(?:\s*)(#{1,6})\s(.*?)(?:\n+|$)/;
+	var headExp = /^(?:\s*)(#{1,6})\s(.*?)(?:\n+|$|\s#{1,6})/;
 	var match;
 	if((match = headExp.exec(md))) {
 		md = md.substring(match[0].length);
@@ -262,7 +282,7 @@ function matchHead(md) {
 	}
 }
 function matchList(md) {
-	var liExp = /^(\*|\d+\.)\s(.*?(?:\n|$))/;
+	var liExp = /^([\*\+\-]|\d+\.)\s(.*?(?:\n|$))/;
 	var multilineExp = /^(?:(?:\t|\s{4}).*?(?:\n|$))+/;
 	var match;
 	var type;
@@ -339,12 +359,52 @@ var tokenize = __webpack_require__(2);
 var join = __webpack_require__(1);
 var input = document.querySelector('#in');
 var output = document.querySelector('#out');
-hljs.highlightBlock(output);
-input.addEventListener('keyup',function () {
-	var result = tokenize(this.value);
+var text = `这是一个阉割版markdown解析器
+
+对markdown解析主要参考[这里](http://daringfireball.net/projects/markdown/syntax#header)
+# 标题
+支持类\`atx\`形式的标题，并支持选择性的闭合
+# H1
+## H2
+### H3
+#### H4 #
+##### H5 ##
+###### H6
+# 列表
+支持有序列表和无序列表，并支持多个段落
+*   这是一段无序列表。
+    这是一段无序列表。
+    这是一段无序列表。
+*   这是一段无序列表
+1. 有序列表
+5. 有序列表
+3. 有序列表
+# 引用
+支持区块引用
+> 这是一段引用。这是一段引用。
+> 这是一段引用。
+这是一段引用。
+
+> 这是另一段引用。这是另一段引用。
+这是另一段引用。
+
+# 代码块
+支持行内代码和缩进产生的代码块，代码块区域中的&、<和>会被转义，暂不支持由反引号\` \`\`\` \`包括的代码块
+    <h1>hello</h1>
+    &alt
+# todo
+1. 实现由反引号\`\`\`包括的代码块的解析
+2. 实现链接、图片解析
+3. 看marked源码
+# 最后
+欢迎找BUG `;
+input.innerHTML = text;
+parse();
+input.addEventListener('keyup',parse);
+function parse() {
+	var result = tokenize(input.value);
 	output.innerHTML = join(result);
-	hljs.highlightBlock(output);
-});
+}
 
 /***/ })
 /******/ ]);

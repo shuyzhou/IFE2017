@@ -1,4 +1,4 @@
-var escapeCode = require('./escapeCode.js');
+//AOP实现职责链
 Function.prototype.after = function(fn) {
 	var self = this;
 	return function () {
@@ -11,12 +11,13 @@ Function.prototype.after = function(fn) {
 		}
 	}
 };
+var escapeCode = require('./escapeCode.js');
 var matchChain = matchCodeBlock.after(matchBlock).after(matchHead).after(matchList).after(matchLineFeed).after(matchParagraph);
 
 function tokenize (md) {
 	var result = [];
 	var matches;
-	md = matchInlineCode(md);
+	md = matchLink(md);
 	while ( md ) {
 		var res = matchChain(md);
 		md = res.sofar;
@@ -24,22 +25,24 @@ function tokenize (md) {
 	}
 	return result;
 }
-function matchInlineCode(str) {
-	var codeExp = /(`+)([^`])?(.*?)([^`])\1(?:[^`]|$)/g;
-	return str.replace(codeExp,function (match,p1,p2,p3,p4) {
-		var code = '';
-		if(p3){
-			code = p3;
-		}
-		if(p2 && p2 !== ' '){
-			code = p2 + code;
-		}
-		if(p4 && p4 !== ' '){
-			code = code + p4;
-		}
-		code = escapeCode(code);
-		return '<code>' + code + '</code>';
+
+function matchLink(str) {
+	var inlineLinkExp = /\[(.*?)\]\((.*?)\s?(?:\"(.*?)\")?\)/g;
+	var refLinkExp = /\[(.+?)\](\[.+?\])/g;
+	str = str.replace(inlineLinkExp,function (match,p1,p2,p3) {
+		return `<a href="${p2||''}"${p3 && ` title=${p3}`||''}>${p1||''}</a>`;
 	});
+	str = str.replace(refLinkExp,function (s,p1,p2) {
+		var refExp = p2 || p1 + ': (.+?)[\s\t\n]';
+		var match;
+		if((match = refExp.exec(str))){
+			return `<a href="${match[1]}">${p1}</a>`;
+		}
+		else {
+			return s;
+		}
+	});
+	return str;
 }
 
 function matchCodeBlock(md) {
@@ -60,7 +63,7 @@ function matchCodeBlock(md) {
 	}
 }
 function matchBlock(md) {
-	var blockExp = /^> (?:.|\n)*?(?:\n(?:\t|\s)\n|$)/;
+	var blockExp = /^(?:>\s(?:.|\n)*?(?:\n(?:\t|\s)*\n|$))+/;
 	var match;
 	var value;
 	if((match = blockExp.exec(md))) {
@@ -81,7 +84,7 @@ function matchBlock(md) {
 }
 
 function matchHead(md) {
-	var headExp = /^(?:\s*)(#{1,6})\s(.*?)(?:\n+|$)/;
+	var headExp = /^(?:\s*)(#{1,6})\s(.*?)(?:\n+|$|\s#{1,6})/;
 	var match;
 	if((match = headExp.exec(md))) {
 		md = md.substring(match[0].length);
@@ -98,7 +101,7 @@ function matchHead(md) {
 	}
 }
 function matchList(md) {
-	var liExp = /^(\*|\d+\.)\s(.*?(?:\n|$))/;
+	var liExp = /^([\*\+\-]|\d+\.)\s(.*?(?:\n|$))/;
 	var multilineExp = /^(?:(?:\t|\s{4}).*?(?:\n|$))+/;
 	var match;
 	var type;
