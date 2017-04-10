@@ -1,4 +1,3 @@
-var escapeCode = require('./escapeCode.js');
 var getContent = {
 	'head': function (i,group) {
 		return '<' + group[i].type + '>' + group[i].value + '</' + group[i].type + '>';
@@ -79,6 +78,13 @@ function matchInlineCode(str) {
 		code = escapeCode(code);
 		return '<code>' + code + '</code>' + p5;
 	});
+}
+
+function escapeCode(str) {
+	return str
+			.replace(/&/g,'&amp;')
+			.replace(/</g,'&lt;')
+			.replace(/>/g,'&gt;');
 }
 function join (group) {
 	var html = '';

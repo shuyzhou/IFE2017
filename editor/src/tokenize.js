@@ -11,7 +11,7 @@ Function.prototype.after = function(fn) {
 		}
 	}
 };
-var escapeCode = require('./escapeCode.js');
+
 var matchChain = matchCodeBlock.after(matchBlock).after(matchHead).after(matchList).after(matchLineFeed).after(matchParagraph);
 
 function tokenize (md) {

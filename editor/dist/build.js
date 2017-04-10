@@ -63,27 +63,13 @@
 /******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports) {
 
-function escapeCode(str) {
-	return str
-			.replace(/&/g,'&amp;')
-			.replace(/</g,'&lt;')
-			.replace(/>/g,'&gt;');
-}
-
-module.exports = escapeCode;
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var escapeCode = __webpack_require__(0);
 var getContent = {
 	'head': function (i,group) {
 		return '<' + group[i].type + '>' + group[i].value + '</' + group[i].type + '>';
@@ -165,6 +151,13 @@ function matchInlineCode(str) {
 		return '<code>' + code + '</code>' + p5;
 	});
 }
+
+function escapeCode(str) {
+	return str
+			.replace(/&/g,'&amp;')
+			.replace(/</g,'&lt;')
+			.replace(/>/g,'&gt;');
+}
 function join (group) {
 	var html = '';
 	for (var i = 0; i < group.length; i++) {
@@ -176,8 +169,8 @@ function join (group) {
 module.exports = join;
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 1 */
+/***/ (function(module, exports) {
 
 //AOP实现职责链
 Function.prototype.after = function(fn) {
@@ -192,7 +185,7 @@ Function.prototype.after = function(fn) {
 		}
 	}
 };
-var escapeCode = __webpack_require__(0);
+
 var matchChain = matchCodeBlock.after(matchBlock).after(matchHead).after(matchList).after(matchLineFeed).after(matchParagraph);
 
 function tokenize (md) {
@@ -352,11 +345,11 @@ function shimIndent(str) {
 module.exports = tokenize;
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var tokenize = __webpack_require__(2);
-var join = __webpack_require__(1);
+var tokenize = __webpack_require__(1);
+var join = __webpack_require__(0);
 var input = document.querySelector('#in');
 var output = document.querySelector('#out');
 var text = `这是一个阉割版markdown解析器
