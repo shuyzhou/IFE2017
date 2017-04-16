@@ -2,16 +2,16 @@ const async = require('async');
 const crawler = require('../crawler/task.js');
 const dataDAO = require("../crawler/model/data");
 module.exports = async function run(socket){
-	socket.on('crawler', async function (data) {
-		var queue = async.queue(function(data, callback) {
+    socket.on('crawler', async function (data) {
+        var queue = async.queue(function(data, callback) {
             let {word,page,device} = data;
             task(socket,word,page,device);
-    		callback();
-		}, 5);
-		data.deviceList.forEach(function (device) {
-  			queue.push({word: data.word,page: data.page,device: device})
+            callback();
+        }, 5);
+        data.deviceList.forEach(function (device) {
+            queue.push({word: data.word,page: data.page,device: device})
         });
-	});
+    });
 }
 
 async function task(socket,word,page,device) {
