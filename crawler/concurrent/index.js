@@ -7,8 +7,8 @@ const app = new Koa();
 const server = require('http').createServer(app.callback());
 const socket = require('./socket')(server);
 
-app .use(serve(path.join(__dirname, '/public')))
-	.use(views(path.join(__dirname, '/views')))
-	.use(router.routes());
+app 
+    .use(serve(path.join(__dirname, '/public')))
+    .use(views(path.join(__dirname, '/views')))
+    .use(router.routes());
 server.listen(8080);
-console.log("server start");
