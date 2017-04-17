@@ -3,7 +3,6 @@ var join = require('./join.js');
 var input = document.querySelector('#in');
 var output = document.querySelector('#out');
 var text = `这是一个阉割版markdown解析器
-
 对markdown解析主要参考[这里](http://daringfireball.net/projects/markdown/syntax#header)
 # 标题
 支持类\`atx\`形式的标题，并支持选择性的闭合
