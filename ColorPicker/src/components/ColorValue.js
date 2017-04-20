@@ -44,6 +44,10 @@ export default class ColorValue {
             }
             var target = e.target;
             var input = target.value;
+            if (!util.isValidInput(input)) {
+                alert('请输入合法数字');
+                return;
+            }
             this.set(parseFloat(input), target.id)
         }
         dealClick(e) {
@@ -110,7 +114,7 @@ export default class ColorValue {
         }
         set(data, type) {
             type = type.toLowerCase();
-            data = util.fixInput(data, type);
+            data = util.fixSet(data, type);
             this.model[type] = data;
             switch (type) {
             case 'r':

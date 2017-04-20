@@ -105,7 +105,7 @@ export default {
 			v = p;
 		return parseInt(255 * v);
 	},
-	fixInput: function(value,type){
+	fixSet: function(value,type){
 		switch (type) {
 			case 'r':
 			case 'g':
@@ -116,5 +116,14 @@ export default {
 			case 'l':
 				return value = (value < 0) ? 0 : (value > 1) ? 1 : value;
 		}
-	}
+	},
+    isValidInput: function (input) {
+        var numberExpr = /d+(\.d+)?/;
+        if (numberExpr.test(input)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }
