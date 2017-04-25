@@ -53,9 +53,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var picker = new _Picker2.default('#picker', {
-		r: 0,
-		g: 255,
-		b: 243
+	    r: 0,
+	    g: 255,
+	    b: 243
 	});
 
 /***/ },
@@ -65,7 +65,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	    value: true
 	});
 
 	var _classCallCheck2 = __webpack_require__(2);
@@ -95,40 +95,40 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Picker = function () {
-		function Picker(el, color) {
-			(0, _classCallCheck3.default)(this, Picker);
+	    function Picker(el, color) {
+	        (0, _classCallCheck3.default)(this, Picker);
 
-			this.el = document.querySelector(el);
-			this.panel = new _Panel2.default('#panel', color);
-			this.stripe = new _Stripe2.default('#stripe', color);
-			this.colorValue = new _ColorValue2.default('#colorValue', color);
-			this.init();
-		}
+	        this.el = document.querySelector(el);
+	        this.panel = new _Panel2.default('#panel', color);
+	        this.stripe = new _Stripe2.default('#stripe', color);
+	        this.colorValue = new _ColorValue2.default('#colorValue', color);
+	        this.init();
+	    }
 
-		(0, _createClass3.default)(Picker, [{
-			key: 'init',
-			value: function init() {
-				_watcher2.default.listen('hueChange', this.panel.render, this.panel);
-				_watcher2.default.listen('hueChange', this.colorValue.hueChange, this.colorValue);
-				_watcher2.default.listen('colorChange', this.colorValue.pick, this.colorValue);
-				_watcher2.default.listen('input', this.stripe.dealInput, this.stripe);
-				_watcher2.default.listen('input', this.panel.dealInput, this.panel);
-				this.stripe.init();
-				this.panel.init();
-			}
-		}, {
-			key: 'get',
-			value: function get(type) {
-				return this.colorValue.get(type);
-			}
-		}, {
-			key: 'set',
-			value: function set(type, data) {
-				this.colorValue.set(type, data);
-				return true;
-			}
-		}]);
-		return Picker;
+	    (0, _createClass3.default)(Picker, [{
+	        key: 'init',
+	        value: function init() {
+	            _watcher2.default.listen('hueChange', this.panel.render, this.panel);
+	            _watcher2.default.listen('hueChange', this.colorValue.hueChange, this.colorValue);
+	            _watcher2.default.listen('colorChange', this.colorValue.pick, this.colorValue);
+	            _watcher2.default.listen('input', this.stripe.dealInput, this.stripe);
+	            _watcher2.default.listen('input', this.panel.dealInput, this.panel);
+	            this.stripe.init();
+	            this.panel.init();
+	        }
+	    }, {
+	        key: 'get',
+	        value: function get(type) {
+	            return this.colorValue.get(type);
+	        }
+	    }, {
+	        key: 'set',
+	        value: function set(type, data) {
+	            this.colorValue.set(type, data);
+	            return true;
+	        }
+	    }]);
+	    return Picker;
 	}();
 
 	exports.default = Picker;
@@ -530,7 +530,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	    value: true
 	});
 
 	var _classCallCheck2 = __webpack_require__(2);
@@ -552,73 +552,73 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Panel = function () {
-		function Panel(el, color) {
-			(0, _classCallCheck3.default)(this, Panel);
+	    function Panel(el, color) {
+	        (0, _classCallCheck3.default)(this, Panel);
 
-			this.el = document.querySelector(el);
-			this.ctx = this.el.getContext('2d');
-			this.color = _util2.default.rgb2HSB(color);
-			this.size = 500;
-		}
+	        this.el = document.querySelector(el);
+	        this.ctx = this.el.getContext('2d');
+	        this.color = _util2.default.rgb2HSB(color);
+	        this.size = 500;
+	    }
 
-		(0, _createClass3.default)(Panel, [{
-			key: 'init',
-			value: function init() {
-				this.el.height = this.size;
-				this.el.width = this.size;
-				this.render(this.color.h, this.color.s * this.size, this.color.b * this.size);
-				//监听点击事件
-				this.el.addEventListener('click', function (e) {
-					var x = e.offsetX,
-					    y = e.offsetY;
-					this.render(this.color.h, x, y);
-					//触发颜色改变事件
-					var rgb = _util2.default.getRGBValue(this.ctx, x, y);
-					_watcher2.default.trigger('colorChange', rgb);
-				}.bind(this));
-			}
-		}, {
-			key: 'dealInput',
-			value: function dealInput(color) {
-				var _util$rgb2HSB = _util2.default.rgb2HSB(color),
-				    h = _util$rgb2HSB.h,
-				    s = _util$rgb2HSB.s,
-				    b = _util$rgb2HSB.b;
+	    (0, _createClass3.default)(Panel, [{
+	        key: 'init',
+	        value: function init() {
+	            this.el.height = this.size;
+	            this.el.width = this.size;
+	            this.render(this.color.h, this.color.s * this.size, this.color.b * this.size);
+	            //监听点击事件
+	            this.el.addEventListener('click', function (e) {
+	                var x = e.offsetX,
+	                    y = e.offsetY;
+	                this.render(this.color.h, x, y);
+	                //触发颜色改变事件
+	                var rgb = _util2.default.getRGBValue(this.ctx, x, y);
+	                _watcher2.default.trigger('colorChange', rgb);
+	            }.bind(this));
+	        }
+	    }, {
+	        key: 'dealInput',
+	        value: function dealInput(color) {
+	            var _util$rgb2HSB = _util2.default.rgb2HSB(color),
+	                h = _util$rgb2HSB.h,
+	                s = _util$rgb2HSB.s,
+	                b = _util$rgb2HSB.b;
 
-				this.render(h, b * this.size, s * this.size);
-			}
-		}, {
-			key: 'render',
-			value: function render(h) {
-				var x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
-				var y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
+	            this.render(h, b * this.size, s * this.size);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render(h) {
+	            var x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
+	            var y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
 
-				/* @param h range(0,360)
-	    * @param x range(0,500)
-	    * @param y range(0,500)
-	   */
-				//绘制垂直方向饱和度渐变
-				this.color.h = h;
-				var sGradient = this.ctx.createLinearGradient(0, 0, 0, 500);
-				sGradient.addColorStop(0, 'white');
-				sGradient.addColorStop(1, 'hsl(' + h + ',100%,50%)');
-				this.ctx.fillStyle = sGradient;
-				this.ctx.fillRect(0, 0, 500, 500);
-				//叠加水平方向亮度渐变
-				var lGradient = this.ctx.createLinearGradient(0, 0, 500, 0);
-				lGradient.addColorStop(0, 'rgba(0,0,0,1)');
-				lGradient.addColorStop(1, 'rgba(0,0,0,0)');
-				this.ctx.fillStyle = lGradient;
-				this.ctx.fillRect(0, 0, 500, 500);
-				//绘制提示圆圈
-				this.ctx.strokeStyle = 'white';
-				this.ctx.beginPath();
-				this.ctx.lineWidth = 4;
-				this.ctx.arc(x, y, 9, 0, 2 * Math.PI);
-				this.ctx.stroke();
-			}
-		}]);
-		return Panel;
+	            /* @param h range(0,360)
+	            * @param x range(0,500)
+	            * @param y range(0,500)
+	            */
+	            //绘制垂直方向饱和度渐变
+	            this.color.h = h;
+	            var sGradient = this.ctx.createLinearGradient(0, 0, 0, 500);
+	            sGradient.addColorStop(0, 'white');
+	            sGradient.addColorStop(1, 'hsl(' + h + ',100%,50%)');
+	            this.ctx.fillStyle = sGradient;
+	            this.ctx.fillRect(0, 0, 500, 500);
+	            //叠加水平方向亮度渐变
+	            var lGradient = this.ctx.createLinearGradient(0, 0, 500, 0);
+	            lGradient.addColorStop(0, 'rgba(0,0,0,1)');
+	            lGradient.addColorStop(1, 'rgba(0,0,0,0)');
+	            this.ctx.fillStyle = lGradient;
+	            this.ctx.fillRect(0, 0, 500, 500);
+	            //绘制提示圆圈
+	            this.ctx.strokeStyle = 'white';
+	            this.ctx.beginPath();
+	            this.ctx.lineWidth = 4;
+	            this.ctx.arc(x, y, 9, 0, 2 * Math.PI);
+	            this.ctx.stroke();
+	        }
+	    }]);
+	    return Panel;
 	}();
 
 	exports.default = Panel;
@@ -733,7 +733,7 @@
 			if (6 * h < 1) v = p + (q - p) * h * 6;else if (2 * h < 1) v = q;else if (3 * h < 2) v = p + (q - p) * (2 / 3 - h) * 6;else v = p;
 			return parseInt(255 * v);
 		},
-		fixInput: function fixInput(value, type) {
+		fixSet: function fixSet(value, type) {
 			switch (type) {
 				case 'r':
 				case 'g':
@@ -743,6 +743,14 @@
 				case 's':
 				case 'l':
 					return value = value < 0 ? 0 : value > 1 ? 1 : value;
+			}
+		},
+		isValidInput: function isValidInput(input) {
+			var numberExpr = /d+(\.d+)?/;
+			if (numberExpr.test(input)) {
+				return true;
+			} else {
+				return false;
 			}
 		}
 	};
@@ -754,7 +762,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	    value: true
 	});
 
 	var _classCallCheck2 = __webpack_require__(2);
@@ -776,64 +784,64 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Stripe = function () {
-		function Stripe(el, color) {
-			(0, _classCallCheck3.default)(this, Stripe);
+	    function Stripe(el, color) {
+	        (0, _classCallCheck3.default)(this, Stripe);
 
-			var _util$rgb2HSB = _util2.default.rgb2HSB(color),
-			    h = _util$rgb2HSB.h;
+	        var _util$rgb2HSB = _util2.default.rgb2HSB(color),
+	            h = _util$rgb2HSB.h;
 
-			this.el = document.querySelector(el);
-			this.ctx = this.el.getContext('2d');
-			this.hue = h < 1 ? h : h / 360;
-			this.width = 25;
-			this.height = 500;
-		}
+	        this.el = document.querySelector(el);
+	        this.ctx = this.el.getContext('2d');
+	        this.hue = h < 1 ? h : h / 360;
+	        this.width = 25;
+	        this.height = 500;
+	    }
 
-		(0, _createClass3.default)(Stripe, [{
-			key: 'init',
-			value: function init() {
-				this.render(this.hue * this.height);
-				//监听点击事件
-				this.el.addEventListener('click', function (e) {
-					var y = e.offsetY;
-					this.render(y);
-					//触发色带改变事件
-					_watcher2.default.trigger('hueChange', y / this.height * 360);
-				}.bind(this));
-			}
-		}, {
-			key: 'dealInput',
-			value: function dealInput(color) {
-				var _util$rgb2HSB2 = _util2.default.rgb2HSB(color),
-				    h = _util$rgb2HSB2.h;
+	    (0, _createClass3.default)(Stripe, [{
+	        key: 'init',
+	        value: function init() {
+	            this.render(this.hue * this.height);
+	            //监听点击事件
+	            this.el.addEventListener('click', function (e) {
+	                var y = e.offsetY;
+	                this.render(y);
+	                //触发色带改变事件
+	                _watcher2.default.trigger('hueChange', y / this.height * 360);
+	            }.bind(this));
+	        }
+	    }, {
+	        key: 'dealInput',
+	        value: function dealInput(color) {
+	            var _util$rgb2HSB2 = _util2.default.rgb2HSB(color),
+	                h = _util$rgb2HSB2.h;
 
-				this.render(h / 360 * this.height);
-			}
-		}, {
-			key: 'render',
-			value: function render(y) {
-				//绘制颜色色带
-				var gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
-				this.el.height = this.height;
-				this.el.width = this.width;
-				gradient.addColorStop(0, '#ff0000');
-				gradient.addColorStop(0.167, '#ffff00');
-				gradient.addColorStop(0.333, '#00ff00');
-				gradient.addColorStop(0.5, '#00ffff');
-				gradient.addColorStop(0.667, '#0000ff');
-				gradient.addColorStop(0.833, '#ff00ff');
-				gradient.addColorStop(1, '#ff0000');
-				this.ctx.fillStyle = gradient;
-				this.ctx.fillRect(0, 0, this.width, this.height);
-				//绘制提示圆圈
-				this.ctx.strokeStyle = 'white';
-				this.ctx.beginPath();
-				this.ctx.lineWidth = 4;
-				this.ctx.arc(this.width / 2, y, 9, 0, 2 * Math.PI);
-				this.ctx.stroke();
-			}
-		}]);
-		return Stripe;
+	            this.render(h / 360 * this.height);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render(y) {
+	            //绘制颜色色带
+	            var gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
+	            this.el.height = this.height;
+	            this.el.width = this.width;
+	            gradient.addColorStop(0, '#ff0000');
+	            gradient.addColorStop(0.167, '#ffff00');
+	            gradient.addColorStop(0.333, '#00ff00');
+	            gradient.addColorStop(0.5, '#00ffff');
+	            gradient.addColorStop(0.667, '#0000ff');
+	            gradient.addColorStop(0.833, '#ff00ff');
+	            gradient.addColorStop(1, '#ff0000');
+	            this.ctx.fillStyle = gradient;
+	            this.ctx.fillRect(0, 0, this.width, this.height);
+	            //绘制提示圆圈
+	            this.ctx.strokeStyle = 'white';
+	            this.ctx.beginPath();
+	            this.ctx.lineWidth = 4;
+	            this.ctx.arc(this.width / 2, y, 9, 0, 2 * Math.PI);
+	            this.ctx.stroke();
+	        }
+	    }]);
+	    return Stripe;
 	}();
 
 	exports.default = Stripe;
@@ -845,7 +853,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	    value: true
 	});
 
 	var _classCallCheck2 = __webpack_require__(2);
@@ -867,176 +875,183 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var ColorValue = function () {
-		function ColorValue(el, color) {
-			(0, _classCallCheck3.default)(this, ColorValue);
+	    function ColorValue(el, color) {
+	        (0, _classCallCheck3.default)(this, ColorValue);
 
-			this.el = document.querySelector(el);
-			this.els = {};
-			this.els.r = this.el.querySelector('#r');
-			this.els.g = this.el.querySelector('#g');
-			this.els.b = this.el.querySelector('#b');
-			this.els.h = this.el.querySelector('#h');
-			this.els.s = this.el.querySelector('#s');
-			this.els.l = this.el.querySelector('#l');
-			this.model = {};
-			this.init();
-			this.pick(color);
-		}
+	        this.el = document.querySelector(el);
+	        this.els = {};
+	        this.els.r = this.el.querySelector('#r');
+	        this.els.g = this.el.querySelector('#g');
+	        this.els.b = this.el.querySelector('#b');
+	        this.els.h = this.el.querySelector('#h');
+	        this.els.s = this.el.querySelector('#s');
+	        this.els.l = this.el.querySelector('#l');
+	        this.model = {};
+	        this.init();
+	        this.pick(color);
+	    }
 
-		(0, _createClass3.default)(ColorValue, [{
-			key: 'init',
-			value: function init() {
-				this.el.addEventListener('keypress', this.dealInput.bind(this));
-				this.el.addEventListener('click', this.dealClick.bind(this));
-			}
-		}, {
-			key: 'pick',
-			value: function pick(color) {
-				var r = color.r,
-				    g = color.g,
-				    b = color.b;
+	    (0, _createClass3.default)(ColorValue, [{
+	        key: 'init',
+	        value: function init() {
+	            this.el.addEventListener('keypress', this.dealInput.bind(this));
+	            this.el.addEventListener('click', this.dealClick.bind(this));
+	        }
+	    }, {
+	        key: 'pick',
+	        value: function pick(color) {
+	            var r = color.r,
+	                g = color.g,
+	                b = color.b;
 
-				var _util$rgb2HSL = _util2.default.rgb2HSL(color),
-				    h = _util$rgb2HSL.h,
-				    s = _util$rgb2HSL.s,
-				    l = _util$rgb2HSL.l;
+	            var _util$rgb2HSL = _util2.default.rgb2HSL(color),
+	                h = _util$rgb2HSL.h,
+	                s = _util$rgb2HSL.s,
+	                l = _util$rgb2HSL.l;
 
-				this.model.r = r;
-				this.model.g = g;
-				this.model.b = b;
-				this.model.h = h;
-				this.model.s = s;
-				this.model.l = l;
-				this.render();
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _model = this.model,
-				    r = _model.r,
-				    g = _model.g,
-				    b = _model.b,
-				    h = _model.h,
-				    s = _model.s,
-				    l = _model.l;
+	            this.model.r = r;
+	            this.model.g = g;
+	            this.model.b = b;
+	            this.model.h = h;
+	            this.model.s = s;
+	            this.model.l = l;
+	            this.render();
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _model = this.model,
+	                r = _model.r,
+	                g = _model.g,
+	                b = _model.b,
+	                h = _model.h,
+	                s = _model.s,
+	                l = _model.l;
 
-				this.els.r.value = r;
-				this.els.g.value = g;
-				this.els.b.value = b;
-				this.els.h.value = h.toFixed(2).replace(/\.?0*$/g, '');
-				this.els.s.value = s.toFixed(2).replace(/\.?0*$/g, '');
-				this.els.l.value = l.toFixed(2).replace(/\.?0*$/g, '');
-			}
-		}, {
-			key: 'dealInput',
-			value: function dealInput(e) {
-				if (e.keyCode !== 13) {
-					return;
-				}
-				var target = e.target;
-				var input = target.value;
-				this.set(parseFloat(input), target.id);
-			}
-		}, {
-			key: 'dealClick',
-			value: function dealClick(e) {
-				var target = e.target;
-				if (target.tagName.toLowerCase() === 'button') {
-					var type = target.getAttribute("data-for");
-					var oldValue = parseFloat(this.els[type].value);
-					var operation = target.className;
-					var method = {
-						plus: function plus(value, accuracy) {
-							return value + accuracy;
-						},
-						minus: function minus(value, accuracy) {
-							return value - accuracy;
-						}
-					};
-					var value;
-					switch (type) {
-						case 'r':
-						case 'g':
-						case 'b':
-							value = method[operation](oldValue, 1);
-							break;
-						case 'h':
-						case 's':
-						case 'l':
-							value = method[operation](oldValue, 0.01);
-							break;
-					}
-					this.set(value, type);
-				}
-			}
-		}, {
-			key: 'hueChange',
-			value: function hueChange(hue) {
-				hue = hue / 360;
-				this.set(hue, 'h');
-				this.set(1, 's');
-				this.set(0.5, 'l');
-			}
-		}, {
-			key: 'get',
-			value: function get(type) {
-				type = type.toLowerCase();
-				switch (type) {
-					case 'rgb':
-						return {
-							r: this.model.r,
-							g: this.model.g,
-							b: this.model.b
-						};break;
-					case 'hsl':
-						return {
-							h: this.model.h,
-							s: this.model.s,
-							l: this.model.l
-						};break;
-					case 'hex':
-						return _util2.default.rgb2Hex([this.model, r, this.model, g, this.model, b]);break;
-					case 'default':
-						throw Error('Invalid parameter!');
-				}
-			}
-		}, {
-			key: 'set',
-			value: function set(data, type) {
-				type = type.toLowerCase();
-				data = _util2.default.fixInput(data, type);
-				this.model[type] = data;
-				switch (type) {
-					case 'r':
-					case 'g':
-					case 'b':
-						var _util$rgb2HSL2 = _util2.default.rgb2HSL(this.model),
-						    h = _util$rgb2HSL2.h,
-						    s = _util$rgb2HSL2.s,
-						    l = _util$rgb2HSL2.l;
+	            this.els.r.value = r;
+	            this.els.g.value = g;
+	            this.els.b.value = b;
+	            this.els.h.value = h.toFixed(2).replace(/\.?0*$/g, '');
+	            this.els.s.value = s.toFixed(2).replace(/\.?0*$/g, '');
+	            this.els.l.value = l.toFixed(2).replace(/\.?0*$/g, '');
+	        }
+	    }, {
+	        key: 'dealInput',
+	        value: function dealInput(e) {
+	            if (e.keyCode !== 13) {
+	                return;
+	            }
+	            var target = e.target;
+	            var input = target.value;
+	            if (!_util2.default.isValidInput(input)) {
+	                alert('请输入合法数字');
+	                return;
+	            }
+	            this.set(parseFloat(input), target.id);
+	        }
+	    }, {
+	        key: 'dealClick',
+	        value: function dealClick(e) {
+	            var target = e.target;
+	            if (target.tagName.toLowerCase() === 'button') {
+	                var type = target.getAttribute("data-for");
+	                var oldValue = parseFloat(this.els[type].value);
+	                var operation = target.className;
+	                var method = {
+	                    plus: function plus(value, accuracy) {
+	                        return value + accuracy;
+	                    },
+	                    minus: function minus(value, accuracy) {
+	                        return value - accuracy;
+	                    }
+	                };
+	                var value;
+	                switch (type) {
+	                    case 'r':
+	                    case 'g':
+	                    case 'b':
+	                        value = method[operation](oldValue, 1);
+	                        break;
+	                    case 'h':
+	                    case 's':
+	                    case 'l':
+	                        value = method[operation](oldValue, 0.01);
+	                        break;
+	                }
+	                this.set(value, type);
+	            }
+	        }
+	    }, {
+	        key: 'hueChange',
+	        value: function hueChange(hue) {
+	            hue = hue / 360;
+	            this.set(hue, 'h');
+	            this.set(1, 's');
+	            this.set(0.5, 'l');
+	        }
+	    }, {
+	        key: 'get',
+	        value: function get(type) {
+	            type = type.toLowerCase();
+	            switch (type) {
+	                case 'rgb':
+	                    return {
+	                        r: this.model.r,
+	                        g: this.model.g,
+	                        b: this.model.b
+	                    };
+	                    break;
+	                case 'hsl':
+	                    return {
+	                        h: this.model.h,
+	                        s: this.model.s,
+	                        l: this.model.l
+	                    };
+	                    break;
+	                case 'hex':
+	                    return _util2.default.rgb2Hex([this.model, r, this.model, g, this.model, b]);
+	                    break;
+	                case 'default':
+	                    throw Error('Invalid parameter!');
+	            }
+	        }
+	    }, {
+	        key: 'set',
+	        value: function set(data, type) {
+	            type = type.toLowerCase();
+	            data = _util2.default.fixSet(data, type);
+	            this.model[type] = data;
+	            switch (type) {
+	                case 'r':
+	                case 'g':
+	                case 'b':
+	                    var _util$rgb2HSL2 = _util2.default.rgb2HSL(this.model),
+	                        h = _util$rgb2HSL2.h,
+	                        s = _util$rgb2HSL2.s,
+	                        l = _util$rgb2HSL2.l;
 
-						this.model.h = h;
-						this.model.s = s;
-						this.model.l = l;
-						break;
-					case 'h':
-					case 's':
-					case 'l':
-						var _util$HSL2rgb = _util2.default.HSL2rgb(this.model),
-						    r = _util$HSL2rgb.r,
-						    g = _util$HSL2rgb.g,
-						    b = _util$HSL2rgb.b;
+	                    this.model.h = h;
+	                    this.model.s = s;
+	                    this.model.l = l;
+	                    break;
+	                case 'h':
+	                case 's':
+	                case 'l':
+	                    var _util$HSL2rgb = _util2.default.HSL2rgb(this.model),
+	                        r = _util$HSL2rgb.r,
+	                        g = _util$HSL2rgb.g,
+	                        b = _util$HSL2rgb.b;
 
-						this.model.r = r;
-						this.model.g = g;
-						this.model.b = b;
-						break;
-				}
-				this.render();
-				_watcher2.default.trigger('input', this.model);
-			}
-		}]);
-		return ColorValue;
+	                    this.model.r = r;
+	                    this.model.g = g;
+	                    this.model.b = b;
+	                    break;
+	            }
+	            this.render();
+	            _watcher2.default.trigger('input', this.model);
+	        }
+	    }]);
+	    return ColorValue;
 	}();
 
 	exports.default = ColorValue;
