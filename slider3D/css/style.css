@@ -2,70 +2,42 @@ body {
 	margin: 0;
 	padding: 0;
 }
+#slider {
+	perspective: 800px;
+}
+.wrapper {
+	width: 300px;
+    height: 300px;
+    margin-left: -100px; 
+    position: absolute;
+    left: 50%;
+    transition: all 1s;
+	transform-style: preserve-3d;
+}
 .image {
-	width: 600px;
-	height: 400px;
+	width: 300px;
+	height: 200px;
 	position: absolute;
 	top:50%;
 	left: 50%;
-	margin: -200px 0 0 -300px;
+	margin: -100px 0 0 -150px;
 	display: block;
 }
-#img1 {
-	z-index: 100;
+.wrapper > img:nth-child(1) { 
+	transform: rotateY(0deg) translateZ(300px); 
 }
-#img2 {
-	-webkit-transform:rotateY(60deg) scale(0.67);
-	margin-left: -750px;
-	z-index: 100;
+.wrapper > img:nth-child(2) { 
+	transform: rotateY(60deg) translateZ(300px); 
 }
-#img3 {
-	-webkit-transform:rotateY(120deg) scale(0.4);
-	margin-left: -750px;
-	z-index: 1;
+.wrapper > img:nth-child(3) { 
+	transform: rotateY(120deg) translateZ(300px); 
 }
-#img4 {
-	-webkit-transform:rotateY(180deg) scale(0.33);
-	margin-left: -300px;
-	z-index: 1;
+.wrapper > img:nth-child(4) { 
+	transform: rotateY(180deg) translateZ(300px); 
 }
-#img5 {
-	-webkit-transform:rotateY(240deg) scale(0.4);
-	margin-left: 150px;
-	z-index: 1;
+.wrapper > img:nth-child(5) { 
+	transform: rotateY(240deg) translateZ(300px); 
 }
-#img6 {
-	-webkit-transform:rotateY(300deg) scale(0.67);
-	margin-left: 150px;
-	z-index: 100;
-}
-@-webkit-keyframes slider-stage1
-{
-	from {-webkit-transform:rotateY(0deg) scale(1);margin-left: -300px;z-index: 100;}
-	to {-webkit-transform:rotateY(60deg) scale(0.67);margin-left: -750px;z-index: 100;}
-}
-@-webkit-keyframes slider-stage2
-{
-	from {-webkit-transform:rotateY(60deg) scale(0.67);margin-left: -750px;z-index: 100;}
-	to {-webkit-transform:rotateY(120deg) scale(0.4);margin-left: -750px;z-index: 1;}
-}
-@-webkit-keyframes slider-stage3
-{
-	from {-webkit-transform:rotateY(120deg) scale(0.4);margin-left: -750px;z-index: 1;}
-	to {-webkit-transform:rotateY(180deg) scale(0.33);margin-left: -300px;z-index: 1;}
-}
-@-webkit-keyframes slider-stage4
-{
-	from {-webkit-transform:rotateY(180deg) scale(0.33);margin-left: -300px;z-index: 1;}
-	to {-webkit-transform:rotateY(240deg) scale(0.4);margin-left: 150px;z-index: 1;}
-}
-@-webkit-keyframes slider-stage5
-{
-	from {-webkit-transform:rotateY(240deg) scale(0.4);margin-left: 150px;z-index: 1;}
-	to {-webkit-transform:rotateY(300deg) scale(0.67);margin-left: 150px;z-index: 100;}
-}
-@-webkit-keyframes slider-stage6
-{
-	from {-webkit-transform:rotateY(300deg) scale(0.67);margin-left: 150px;z-index: 100;}
-	to {-webkit-transform:rotateY(360deg) scale(1);margin-left: -300px;z-index: 100;}
+img:nth-child(6) { 
+	transform: rotateY(300deg) translateZ(300px); 
 }
